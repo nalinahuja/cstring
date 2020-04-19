@@ -6,7 +6,7 @@
 #define CSTRING_ERROR (0)
 #define CSTRING_ALLOC (15)
 
-// End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
+// End Includes and Definitions----------------------------------------------------------------------------------------------------------------------------------------------
 
 typedef struct string {
   char * str;
@@ -14,12 +14,7 @@ typedef struct string {
   int len;
 } string;
 
-// End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
-
-int max_allocs, num_allocs;
-string ** allocs = NULL;
-
-// End Alloc Array---------------------------------------------------------------------------------------------------------------------------------------------------------
+// End String Structure------------------------------------------------------------------------------------------------------------------------------------------------------
 
 string * cstring(char * init_c) {
   // Calculate Memory Requirements
@@ -34,39 +29,6 @@ string * cstring(char * init_c) {
 
   // Initialize Structure
   string * s = (string *) calloc(sizeof(string), 1);
-
-  // BEGIN NEW CODE****************
-
-  // Initialize Allocations Array
-  if (!allocs) {
-    num_allocs = 0;
-    max_allocs = CSTRING_ALLOC;
-    allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
-  } else if (num_allocs >= max_allocs) {
-    // Create Resized Allocations Array
-    string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs * 2);
-
-    // Copy Old Data To New Array
-    for (int i = 0; i < max_allocs; i++) {
-      new_allocs[i] = allocs[i];
-    }
-
-    // Free Old Memory
-    free(allocs);
-
-    // Update Allocation Information
-    allocs = new_allocs;
-    max_allocs *= 2;
-  }
-
-  // Insert Allocation Into Array
-  for (int i = 0; i < max_allocs; i++) {
-    if (!allocs[i]) {
-      allocs[i] = s;
-    }
-  }
-
-  // END NEW CODE****************
 
   // Set Structure Members
   s->str = (char *) calloc(sizeof(char), init_size);
@@ -121,21 +83,17 @@ void clear(string * s) {
   s->len = 0;
 }
 
-void delete() {
-  for (int i = 0; i < ) {
+void delete(string * s) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
 
-  }
+  // Free String Memory
+  free(s->str);
+  s->str = NULL;
 
-  // // Assert Pointer Validity
-  // assert((s) && (s->str));
-  //
-  // // Free String Memory
-  // free(s->str);
-  // s->str = NULL;
-  //
-  // // Free Structure Memory
-  // free(s);
-  // s = NULL;
+  // Free Structure Memory
+  free(s);
+  s = NULL;
 }
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
