@@ -24,7 +24,5 @@ int main() {
   printf("%d\n", cap(s));
   printf("%s\n", str(s));
 
-  delete();
-
-
+  delete_all();
 }
