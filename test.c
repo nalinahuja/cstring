@@ -4,12 +4,25 @@
 int main() {
   string * s = cstring("asdf");
 
-  append(s, "hello1000000000");
-
+  printf("%d\n", len(s));
+  printf("%d\n", cap(s));
   printf("%s\n", str(s));
 
-  rem(s, 5);
+  append(s, "1234567890asdfqwer");
+  prepend(s, "helno");
 
+  insert(s, "bruh", len(s));
+
+  printf("%d\n", len(s));
+  printf("%d\n", cap(s));
+  printf("%s\n", str(s));
+
+  for (int i = 0; i < 4; i++) {
+    set(s, i, 'b');
+  }
+
+  printf("%d\n", len(s));
+  printf("%d\n", cap(s));
   printf("%s\n", str(s));
 
   delete(s);

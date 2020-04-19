@@ -125,7 +125,7 @@ string * substrn(string * s, int i, int j) {
   assert((s) && (s->str));
 
   // Range Check Indices
-  if ((i >= 0) && (j < s->len) && (i < j)) {
+  if ((i >= 0) && (j <= s->len) && (i < j)) {
     // Duplicate String
     char * dup = strdup(s->str + i);
     dup[j - i] = NTERM;
@@ -160,14 +160,16 @@ void insert(string * s, char * c, int ins) {
     // Shift Required
     if (ins < s->len) {
       // Right Shift String
-      for (int i = s->len; i > ins; i--) {
-        s->str[i] = s->str[i - 1];
+      for (int i = 0; i < req_len; i++) {
+        for (int j = s->len; j > ins; j--) {
+          s->str[j + i] = s->str[j + i - 1];
+        }
       }
     }
 
     // Copy Request String To Structure
-    for (int i = 0, j = 0; i < req_len; i++, j++) {
-      s->str[ins + i] = c[j];
+    for (int i = 0; i < req_len; i++) {
+      s->str[ins + i] = c[i];
     }
 
     // Adjust Structure Length
