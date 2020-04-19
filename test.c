@@ -2,7 +2,7 @@
 #include "cstring.h"
 
 int main() {
-  string * s = cstring(NULL);
+  string * s = cstring("asdf");
 
   append(s, "hello1000000000");
 
