@@ -2,7 +2,7 @@
 #include <string.h>
 #include <assert.h>
 
-#define NSET (-1)
+#define NSET (0)
 #define ERROR (0)
 #define ALLOC (15)
 
@@ -19,12 +19,12 @@ typedef struct string {
 string * cstring(char * init_c) {
   // Calculate Memory Requirements
   size_t init_size = ALLOC;
-  size_t req_size = NSET;
+  int req_len = NSET;
 
   // Extend Memory For Init String
   if (init_c) {
-    req_size = strlen(init_c);
-    init_size += req_size;
+    req_len = strlen(init_c);
+    init_size += req_len;
   }
 
   // Initialize Structure
@@ -33,12 +33,11 @@ string * cstring(char * init_c) {
   // Set Structure Members
   s->str = (char *) calloc(sizeof(char), init_size);
   s->cap = init_size;
-  s->len = 0;
+  s->len = req_len;
 
   // Copy String To Structure
   if (init_c) {
     strcpy(s->str, init_c);
-    s->len = req_size;
   }
 
   // Return Structure Pointer
