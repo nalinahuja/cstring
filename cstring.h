@@ -25,7 +25,7 @@ string * cstring(char * init) {
   s->len = 0;
 
   if (init) {
-    append(init);
+    append(s, init);
   }
 
   // Return Structure Pointer
