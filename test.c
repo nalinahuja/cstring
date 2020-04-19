@@ -4,11 +4,11 @@
 int main() {
   string * s = new_string();
 
-  append(s, "hello0000");
+  append(s, "hello1000000000");
 
   printf("%s\n", str(s));
 
-  rem(s, 0);
+  rem(s, 5);
 
   printf("%s\n", str(s));
 
