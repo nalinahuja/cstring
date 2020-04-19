@@ -47,6 +47,24 @@ string * cstring(char * init_c) {
 
 // End String Initializer----------------------------------------------------------------------------------------------------------------------------------------------------
 
+int len(string * s) {
+  // Assert Pointer Validity
+  assert(s);
+
+  // Return String Length
+  return (s->len);
+}
+
+char * str(string * s) {
+  // Assert Pointer Validity
+  assert(s);
+
+  // Return String Length
+  return (s->str);
+}
+
+// End Field Access Functions------------------------------------------------------------------------------------------------------------------------------------------------
+
 void clear(string * s) {
   // Assert Pointer Validity
   assert((s) && (s->str));
@@ -72,24 +90,6 @@ void delete(string * s) {
 }
 
 // End Memory Management Functions-------------------------------------------------------------------------------------------------------------------------------------------
-
-int len(string * s) {
-  // Assert Pointer Validity
-  assert(s);
-
-  // Return String Length
-  return (s->len);
-}
-
-char * str(string * s) {
-  // Assert Pointer Validity
-  assert(s);
-
-  // Return String Length
-  return (s->str);
-}
-
-// End Field Access Functions------------------------------------------------------------------------------------------------------------------------------------------------
 
 void insert(string * s, char * c, int ins) {
   // Assert Pointer Validity
