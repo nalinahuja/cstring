@@ -72,9 +72,16 @@ char * str(string * s) {
   return (s->str);
 }
 
+// End Field Access Functions------------------------------------------------------------------------------------------------------------------------------------------------
+
 void insert(string * s, char * c, int ins) {
   // Assert Pointer Validity
   assert((s) && (s->str));
+
+  // Range Check Index
+  if ((ins < 0) || (ins > s->len)) {
+    return;
+  }
 
   // Calculate Length Of Request
   int req_len = strlen(c);
@@ -165,8 +172,22 @@ void set(string * s, int i, char c) {
   s->str[i] = c;
 }
 
-void rem(string * s, int i) {
-  // implement
+char rem(string * s, int ins) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Range Check Index
+  if ((i < 0) || (i >= s->len)) {
+    return;
+  }
+
+  // Store Removed Character For Return
+  char rem_c = s->str[i];
+  s->len -= 1;
+
+  for (int i = )
+
+
 }
 
 char * strsub(string * s, int i) {
