@@ -2,7 +2,7 @@
 #include "cstring.h"
 
 int main() {
-  string * s = new_string();
+  string * s = cstring(NULL);
 
   append(s, "hello1000000000");
 

@@ -15,7 +15,7 @@ typedef struct string {
 
 // End String Structure------------------------------------------------------------------------------------------------------------------------------------------------------
 
-string * new_string(void) {
+string * cstring(char * init) {
   // Initialize Structure
   string * s = (string *) calloc(sizeof(string), 1);
 
@@ -23,6 +23,10 @@ string * new_string(void) {
   s->str = (char *) calloc(sizeof(char), ALLOC);
   s->cap = ALLOC;
   s->len = 0;
+
+  if (init) {
+    append(init);
+  }
 
   // Return Structure Pointer
   return s;
@@ -76,7 +80,7 @@ char * str(string * s) {
 
 void insert(string * s, char * c, int ins) {
   // Assert Pointer Validity
-  assert((s) && (s->str));
+  assert((s) && (s->str) && (c));
 
   // Range Check Index
   if ((ins < 0) || (ins > s->len)) {
