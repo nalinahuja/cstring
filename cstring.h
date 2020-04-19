@@ -6,7 +6,7 @@
 #define CSTRING_ERROR (0)
 #define CSTRING_ALLOC (15)
 
-// End Includes and Definitions----------------------------------------------------------------------------------------------------------------------------------------------
+// End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
 typedef struct string {
   char * str;
@@ -14,7 +14,12 @@ typedef struct string {
   int len;
 } string;
 
-// End String Structure------------------------------------------------------------------------------------------------------------------------------------------------------
+// End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
+
+int max_allocs, curr_allocs;
+string ** allocs = NULL;
+
+// End Alloc Array---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 string * cstring(char * init_c) {
   // Calculate Memory Requirements
@@ -28,10 +33,25 @@ string * cstring(char * init_c) {
   }
 
   // Initialize Structure
-  string * s = (string *) cCSTRING_ALLOC(sizeof(string), 1);
+  string * s = (string *) calloc(sizeof(string), 1);
+
+  // Initialize Allocations Array
+  if (!allocs) {
+    max_allocs = CSTRING_ALLOC;
+    allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
+  } else if (curr_allocs + 1 > max_allocs) {
+    // extend allocations list
+  }
+
+  // Insert Allocation Into Array
+  for (int i = 0; i < max_allocs; i++) {
+    if (!allocs[i]) {
+      allocs[i] = s;
+    }
+  }
 
   // Set Structure Members
-  s->str = (char *) cCSTRING_ALLOC(sizeof(char), init_size);
+  s->str = (char *) calloc(sizeof(char), init_size);
   s->cap = init_size;
   s->len = req_len;
 
@@ -83,17 +103,17 @@ void clear(string * s) {
   s->len = 0;
 }
 
-void delete(string * s) {
-  // Assert Pointer Validity
-  assert((s) && (s->str));
-
-  // Free String Memory
-  free(s->str);
-  s->str = NULL;
-
-  // Free Structure Memory
-  free(s);
-  s = NULL;
+void delete() {
+  // // Assert Pointer Validity
+  // assert((s) && (s->str));
+  //
+  // // Free String Memory
+  // free(s->str);
+  // s->str = NULL;
+  //
+  // // Free Structure Memory
+  // free(s);
+  // s = NULL;
 }
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
@@ -176,7 +196,7 @@ void insert(string * s, char * c, int ins) {
   } else {
     // Extend Memory
     int new_cap = req_mem + CSTRING_ALLOC;
-    char * new_str = (char *) cCSTRING_ALLOC(sizeof(char), new_cap);
+    char * new_str = (char *) calloc(sizeof(char), new_cap);
 
     // Copy Old Memory Contents To New Memory
     for (int i = 0; i < s->len; i++) {

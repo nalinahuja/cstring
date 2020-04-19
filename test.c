@@ -20,6 +20,5 @@ int main() {
   string * s2 = substrn(s, 1, 4);
   printf("%s\n", str(s2));
 
-
   delete(s);
 }
