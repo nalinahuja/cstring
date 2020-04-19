@@ -4,7 +4,7 @@
 #include <assert.h>
 
 #define ERROR (0)
-#define ALLOC_SIZE (15)
+#define ALLOC (15)
 
 // End Includes and Definitions----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -17,29 +17,34 @@ typedef struct string {
 // End String Structure------------------------------------------------------------------------------------------------------------------------------------------------------
 
 string * new_string(void) {
-  // Initialize String Instance
-  string * s = (string *) malloc(sizeof(string));
+  // Initialize Structure
+  string * s = (string *) calloc(sizeof(string), 1);
 
   // Set Structure Members
-  s->str = (char *) calloc(sizeof(char), ALLOC_SIZE);
-  s->cap = ALLOC_SIZE;
+  s->str = (char *) calloc(sizeof(char), ALLOC);
+  s->cap = ALLOC;
   s->len = 0;
 
-  // Return Structure
+  // Return Structure Pointer
   return s;
 }
 
 // End String Initializer----------------------------------------------------------------------------------------------------------------------------------------------------
 
 void clear(string * s) {
-  assert(s);
+  // Assert Pointer Validity
+  assert((s) && (s->str));
 
-  // Reset Length Member
+  // Reset Contents Of String
+  memset(s->str, 0, s->cap);
+
+  // Reset String Length
   s->len = 0;
 }
 
 void delete(string * s) {
-  assert(s);
+  // Assert Pointer Validity
+  assert((s) && (s->str));
 
   // Free String Memory
   free(s->str);
@@ -50,110 +55,140 @@ void delete(string * s) {
   s = NULL;
 }
 
-// End Memory Management Functions----------------------------------------000------------------------------------------------------------------------------------------------
+// End Memory Management Functions-------------------------------------------------------------------------------------------------------------------------------------------
 
 int len(string * s) {
+  // Assert Pointer Validity
   assert(s);
 
   // Return String Length
   return (s->len);
 }
 
-void append(string * s, char * c) {
-  assert(s);
+void insert(string * s, char * c, int ins) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
 
   // Calculate Length Of Request
   int req_len = strlen(c);
 
-  // Enough Memory
-  if (s->cap >= s->len + req_len) {
-    // Copy Request To Structure
-    for (int i = 0; i < req_len; i++) {
-      s->str[s->len + i] = c[i];
+  // Calculate Memory Requirements
+  int str_mem = s->cap;
+  int req_mem = s->len + req_len;
+
+  // Sufficient Memory
+  if (str_mem >= req_mem) {
+    // Shift Required
+    if (ins < s->len) {
+      // Shift Trailing String
+      for (int i = s->len; i > ins; i--) {
+        s->str[i] = s->str[i - 1];
+      }
+    }
+
+    // Copy Request String To Structure
+    for (int i = 0, j = 0; i < req_len; i++, j++) {
+      s->str[ins + i] = c[j];
     }
 
     // Adjust Structure Length
     s->len += req_len;
-  }
-
-  // Insufficient Memory
-  else {
-    // Calculate New Memory Requirements
-    int new_cap = s->len + req_len + ALLOC_SIZE;
+  } else {
+    // Extend Memory
+    int new_cap = req_mem + ALLOC;
     char * new_str = (char *) calloc(sizeof(char), new_cap);
 
-    // Copy String To New Memory
+    // Copy Old Memory Contents To New Memory
     for (int i = 0; i < s->len; i++) {
       new_str[i] = s->str[i];
     }
 
-    // Clear Old Memory
+    // Free Old Memory Contents
     free(s->str);
     s->str = NULL;
 
-    // Adjust Structure Members
-    s->cap = new_cap;
+    // Update Structure Members
     s->str = new_str;
+    s->cap = new_cap;
 
-    // Recursively Add Characters
-
-    append(s, c);
+    // Retry Append Operation
+    insert(s, c, ins);
   }
 }
 
+void append(string * s, char * c) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Call Insert Function
+  insert(s, c, s->len);
+}
+
 void prepend(string * s, char * c) {
-  // implement
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Call Insert Function
+  insert(s, c, 0);
 }
 
 char get(string * s, int i) {
-  assert(s);
+  // Assert Pointer Validity
+  assert((s) && (s->str));
 
   // Range Check Index
   if ((i < 0) || (i >= s->len)) {
     return (ERROR);
-  } else {
-    return (s->str[i]);
-  }
-}
-
-void put(string * s, int i, char c) {
-  // implement
-}
-
-void remc(string * s, int i) {
-  // implement
-}
-
-void remr(string * s, int str, int end) {
-  // implement
-}
-
-char * strsub(string * s, int str) {
-  assert(s);
-
-  // Range Check Indices
-  if ((str <= 0) || (str >= s->len)) {
-    return NULL;
   }
 
-  // Duplicate String
-  char * dup = strdup(s->str + str);
-  return dup;
+  // Return ith Character In String
+  return (s->str[i]);
 }
 
-char * strnsub(string * s, int str, int end) {
-  assert(s);
+void set(string * s, int i, char c) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Range Check Index
+  if ((i < 0) || (i >= s->len)) {
+    return;
+  }
+
+  // Set ith Character In String
+  s->str[i] = c;
+}
+
+void rem(string * s, int i) {
+  // implement
+}
+
+char * strsub(string * s, int i) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Range Check Index
+  if ((i <= 0) || (i >= s->len)) {
+    return (NULL);
+  }
+
+  // Substring From ith Character
+  return (strdup(s->str + i));
+}
+
+char * strnsub(string * s, int i, int j) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
 
   // Range Check Indices
-  if ((str >= 0) && (end < s->len) && (str < end)) {
+  if ((i >= 0) && (j < s->len) && (i < j)) {
     // Duplicate String
-    char * dup = strdup(s->str + str);
+    char * dup = strdup(s->str + i);
+    dup[j - i] = '\0';
 
-    // Set String Termination
-    *(dup + end) = '\0';
-    return dup;
+    // Return Substring
+    return (dup);
   } else {
-    return NULL;
+    return (NULL);
   }
 }
 
