@@ -94,7 +94,7 @@ void insert(string * s, char * c, int ins) {
   if (str_mem >= req_mem) {
     // Shift Required
     if (ins < s->len) {
-      // Shift Trailing String
+      // Right Shift String
       for (int i = s->len; i > ins; i--) {
         s->str[i] = s->str[i - 1];
       }
@@ -131,18 +131,10 @@ void insert(string * s, char * c, int ins) {
 }
 
 void append(string * s, char * c) {
-  // Assert Pointer Validity
-  assert((s) && (s->str));
-
-  // Call Insert Function
   insert(s, c, s->len);
 }
 
 void prepend(string * s, char * c) {
-  // Assert Pointer Validity
-  assert((s) && (s->str));
-
-  // Call Insert Function
   insert(s, c, 0);
 }
 
@@ -172,22 +164,28 @@ void set(string * s, int i, char c) {
   s->str[i] = c;
 }
 
-char rem(string * s, int ins) {
+char rem(string * s, int rem) {
   // Assert Pointer Validity
   assert((s) && (s->str));
 
   // Range Check Index
-  if ((i < 0) || (i >= s->len)) {
-    return;
+  if ((rem < 0) || (rem >= s->len)) {
+    return (ERROR);
   }
 
   // Store Removed Character For Return
-  char rem_c = s->str[i];
+  char rem_c = s->str[rem];
+
+  // Left Shift String
+  for (int i = rem; i < s->len; i++) {
+    s->str[i] = s->str[i + 1];
+  }
+
+  // Update String Length
   s->len -= 1;
 
-  for (int i = )
-
-
+  // Return Removed Character
+  return (rem_c);
 }
 
 char * strsub(string * s, int i) {
