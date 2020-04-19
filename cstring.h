@@ -137,7 +137,7 @@ string * substrn(string * s, int i, int j) {
   }
 }
 
-// End String 
+// End String Replication Functions------------------------------------------------------------------------------------------------------------------------------------------
 
 void insert(string * s, char * c, int ins) {
   // Assert Pointer Validity
