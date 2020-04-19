@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
@@ -63,6 +62,14 @@ int len(string * s) {
 
   // Return String Length
   return (s->len);
+}
+
+char * str(string * s) {
+  // Assert Pointer Validity
+  assert(s);
+
+  // Return String Length
+  return (s->str);
 }
 
 void insert(string * s, char * c, int ins) {
