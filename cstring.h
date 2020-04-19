@@ -98,7 +98,7 @@ void delete(string * s) {
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
 
-string * clone(string * s) {
+string * copy(string * s) {
   // Assert Pointer Validity
   assert((s) && (s->str));
 
