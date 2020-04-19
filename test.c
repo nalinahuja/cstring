@@ -17,13 +17,9 @@ int main() {
   printf("%d\n", cap(s));
   printf("%s\n", str(s));
 
-  for (int i = 0; i < 4; i++) {
-    set(s, i, 'b');
-  }
+  string * s2 = substrn(s, 1, 4);
+  printf("%s\n", str(s2));
 
-  printf("%d\n", len(s));
-  printf("%d\n", cap(s));
-  printf("%s\n", str(s));
 
   delete(s);
 }

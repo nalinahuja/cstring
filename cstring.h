@@ -2,10 +2,9 @@
 #include <string.h>
 #include <assert.h>
 
-#define NSET (0)
-#define ERROR (0)
-#define ALLOC (15)
-#define NTERM ('\0')
+#define CSTRING_NSET (0)
+#define CSTRING_ERROR (0)
+#define CSTRING_ALLOC (15)
 
 // End Includes and Definitions----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -19,8 +18,8 @@ typedef struct string {
 
 string * cstring(char * init_c) {
   // Calculate Memory Requirements
-  size_t init_size = ALLOC;
-  int req_len = NSET;
+  size_t init_size = CSTRING_ALLOC;
+  int req_len = CSTRING_NSET;
 
   // Extend Memory For Init String
   if (init_c) {
@@ -29,10 +28,10 @@ string * cstring(char * init_c) {
   }
 
   // Initialize Structure
-  string * s = (string *) calloc(sizeof(string), 1);
+  string * s = (string *) cCSTRING_ALLOC(sizeof(string), 1);
 
   // Set Structure Members
-  s->str = (char *) calloc(sizeof(char), init_size);
+  s->str = (char *) cCSTRING_ALLOC(sizeof(char), init_size);
   s->cap = init_size;
   s->len = req_len;
 
@@ -128,7 +127,7 @@ string * substrn(string * s, int i, int j) {
   if ((i >= 0) && (j <= s->len) && (i < j)) {
     // Duplicate String
     char * dup = strdup(s->str + i);
-    dup[j - i] = NTERM;
+    dup[j - i] = 0;
 
     // Return Substring
     return (cstring(dup));
@@ -176,8 +175,8 @@ void insert(string * s, char * c, int ins) {
     s->len += req_len;
   } else {
     // Extend Memory
-    int new_cap = req_mem + ALLOC;
-    char * new_str = (char *) calloc(sizeof(char), new_cap);
+    int new_cap = req_mem + CSTRING_ALLOC;
+    char * new_str = (char *) cCSTRING_ALLOC(sizeof(char), new_cap);
 
     // Copy Old Memory Contents To New Memory
     for (int i = 0; i < s->len; i++) {
@@ -217,7 +216,7 @@ char get(string * s, int i) {
 
   // Range Check Index
   if ((i < 0) || (i >= s->len)) {
-    return (ERROR);
+    return (CSTRING_ERROR);
   }
 
   // Return ith Character In String
@@ -230,7 +229,7 @@ char rem(string * s, int rem) {
 
   // Range Check Index
   if ((rem < 0) || (rem >= s->len)) {
-    return (ERROR);
+    return (CSTRING_ERROR);
   }
 
   // Store Removed Character For Return
