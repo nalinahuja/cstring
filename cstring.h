@@ -5,6 +5,7 @@
 #define NSET (0)
 #define ERROR (0)
 #define ALLOC (15)
+#define NTERM ('\0')
 
 // End Includes and Definitions----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -54,6 +55,14 @@ int len(string * s) {
   return (s->len);
 }
 
+int cap(string * s) {
+  // Assert Pointer Validity
+  assert(s);
+
+  // Return String Length
+  return (s->cap);
+}
+
 char * str(string * s) {
   // Assert Pointer Validity
   assert(s);
@@ -89,6 +98,46 @@ void delete(string * s) {
 }
 
 // End Memory Management Functions-------------------------------------------------------------------------------------------------------------------------------------------
+
+string * clone(string * s) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Return Duplicate String Structure
+  return (cstring(strdup(s->str)));
+}
+
+string * substr(string * s, int i) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Range Check Index
+  if ((i <= 0) || (i >= s->len)) {
+    return (NULL);
+  }
+
+  // Substring From ith Character
+  return (cstring(strdup(s->str + i)));
+}
+
+string * substrn(string * s, int i, int j) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Range Check Indices
+  if ((i >= 0) && (j < s->len) && (i < j)) {
+    // Duplicate String
+    char * dup = strdup(s->str + i);
+    dup[j - i] = NTERM;
+
+    // Return Substring
+    return (cstring(dup));
+  } else {
+    return (NULL);
+  }
+}
+
+// End String 
 
 void insert(string * s, char * c, int ins) {
   // Assert Pointer Validity
@@ -154,6 +203,12 @@ void prepend(string * s, char * c) {
   insert(s, c, 0);
 }
 
+void concat(string * s1, string * s2) {
+  append(s1, s2->str);
+}
+
+// End String Manipulation Functions-----------------------------------------------------------------------------------------------------------------------------------------
+
 char get(string * s, int i) {
   // Assert Pointer Validity
   assert((s) && (s->str));
@@ -165,19 +220,6 @@ char get(string * s, int i) {
 
   // Return ith Character In String
   return (s->str[i]);
-}
-
-void set(string * s, int i, char c) {
-  // Assert Pointer Validity
-  assert((s) && (s->str));
-
-  // Range Check Index
-  if ((i < 0) || (i >= s->len)) {
-    return;
-  }
-
-  // Set ith Character In String
-  s->str[i] = c;
 }
 
 char rem(string * s, int rem) {
@@ -204,34 +246,17 @@ char rem(string * s, int rem) {
   return (rem_c);
 }
 
-char * strsub(string * s, int i) {
+void set(string * s, int i, char c) {
   // Assert Pointer Validity
   assert((s) && (s->str));
 
   // Range Check Index
-  if ((i <= 0) || (i >= s->len)) {
-    return (NULL);
+  if ((i < 0) || (i >= s->len)) {
+    return;
   }
 
-  // Substring From ith Character
-  return (strdup(s->str + i));
+  // Set ith Character In String
+  s->str[i] = c;
 }
 
-char * strnsub(string * s, int i, int j) {
-  // Assert Pointer Validity
-  assert((s) && (s->str));
-
-  // Range Check Indices
-  if ((i >= 0) && (j < s->len) && (i < j)) {
-    // Duplicate String
-    char * dup = strdup(s->str + i);
-    dup[j - i] = '\0';
-
-    // Return Substring
-    return (dup);
-  } else {
-    return (NULL);
-  }
-}
-
-// End String Functions------------------------------------------------------------------------------------------------------------------------------------------------------
+// End String Access Functions-----------------------------------------------------------------------------------------------------------------------------------------------
