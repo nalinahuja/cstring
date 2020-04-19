@@ -35,6 +35,8 @@ string * cstring(char * init_c) {
   // Initialize Structure
   string * s = (string *) calloc(sizeof(string), 1);
 
+  // BEGIN NEW CODE****************
+
   // Initialize Allocations Array
   if (!allocs) {
     num_allocs = 0;
@@ -52,7 +54,7 @@ string * cstring(char * init_c) {
     // Free Old Memory
     free(allocs);
 
-    // Update Allocations Information
+    // Update Allocation Information
     allocs = new_allocs;
     max_allocs *= 2;
   }
@@ -63,6 +65,8 @@ string * cstring(char * init_c) {
       allocs[i] = s;
     }
   }
+
+  // END NEW CODE****************
 
   // Set Structure Members
   s->str = (char *) calloc(sizeof(char), init_size);
@@ -118,18 +122,20 @@ void clear(string * s) {
 }
 
 void delete() {
-  for (int i = 0; i < )
+  for (int i = 0; i < ) {
 
-  // Assert Pointer Validity
-  assert((s) && (s->str));
+  }
 
-  // Free String Memory
-  free(s->str);
-  s->str = NULL;
-
-  // Free Structure Memory
-  free(s);
-  s = NULL;
+  // // Assert Pointer Validity
+  // assert((s) && (s->str));
+  //
+  // // Free String Memory
+  // free(s->str);
+  // s->str = NULL;
+  //
+  // // Free Structure Memory
+  // free(s);
+  // s = NULL;
 }
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
