@@ -2,27 +2,12 @@
 #include "cstring.h"
 
 int main() {
-  string * s = cstring("asdf");
+  string * new_string = cstring(NULL);
 
-  printf("%d\n", len(s));
-  printf("%d\n", cap(s));
-  printf("%s\n", str(s));
+  append(new_string, "world");
+  prepend(new_string, "hello ");
 
-  append(s, "1234567890asdfqwer");
-  prepend(s, "helno");
+  printf("%s\n", new_string->str);
 
-  insert(s, "bruh", len(s));
-
-  printf("%d\n", len(s));
-  printf("%d\n", cap(s));
-  printf("%s\n", str(s));
-
-  string * s2 = substrn(s, 1, 4);
-  printf("%s\n", str(s2));
-
-  printf("%d\n", len(s));
-  printf("%d\n", cap(s));
-  printf("%s\n", str(s));
-
-  delete_all();
+  delete(new_string);
 }
