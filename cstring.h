@@ -1,6 +1,6 @@
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 
 #define CSTRING_NSET (0)
 #define CSTRING_ERROR (0)
