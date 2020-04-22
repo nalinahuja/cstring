@@ -36,6 +36,9 @@ string * cstring(char * init_c) {
   s->cap = init_size;
   s->len = req_len;
 
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
   // Copy String To Structure
   if (init_c) {
     strcpy(s->str, init_c);
@@ -73,7 +76,7 @@ char * str(string * s) {
 
 // End Field Access Functions----------------------------------------------------------------------------------------------------------------------------------------------
 
-bool clear(string * s) {
+void clear(string * s) {
   // Assert Pointer Validity
   assert((s) && (s->str));
 
@@ -82,8 +85,6 @@ bool clear(string * s) {
 
   // Reset String Length
   s->len = 0;
-
-  return ();
 }
 
 void delete(string * s) {
@@ -145,12 +146,14 @@ string * substrn(string * s, int i, int j) {
 
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
 
-void insert(string * s, char * c, int ins) {
+bool insert(string * s, char * c, int ins) {
   // Assert Pointer Validity
   assert((s) && (s->str) && (c));
 
   // Assert Range
-  assert((ins < 0) || (ins > s->len));
+  if ((ins < 0) || (ins > s->len)) {
+    return (CSTRING_ERR);
+  }
 
   // Calculate Length Of Request
   int req_len = strlen(c);
@@ -199,24 +202,28 @@ void insert(string * s, char * c, int ins) {
     // Retry Append Operation
     insert(s, c, ins);
   }
+
+  // Return Success
+  return (CSTRING_SUC);
 }
 
-void append(string * s, char * c) {
-  insert(s, c, s->len);
+bool append(string * s, char * c) {
+  return (insert(s, c, s->len));
 }
 
-void prepend(string * s, char * c) {
-  insert(s, c, 0);
+bool prepend(string * s, char * c) {
+  return (insert(s, c, 0));
 }
 
-void concat(string * s1, string * s2) {
-  append(s1, s2->str);
+bool concat(string * s1, string * s2) {
+  return (append(s1, s2->str));
 }
 
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
 
 int find(string * s, char * c) {
   // implement
+  return 0;
 }
 
 char get(string * s, int i) {
@@ -232,15 +239,20 @@ char get(string * s, int i) {
   return (s->str[i]);
 }
 
-void set(string * s, int i, char c) {
+bool set(string * s, int i, char c) {
   // Assert Pointer Validity
   assert((s) && (s->str));
 
   // Assert Range
-  assert((i < 0) || (i >= s->len));
+  if ((i < 0) || (i >= s->len)) {
+    return (CSTRING_ERR);
+  }
 
   // Set ith Character In String
   s->str[i] = c;
+
+  // Return Success
+  return (CSTRING_SUC);
 }
 
 char rem(string * s, int rem) {
