@@ -197,6 +197,7 @@ string * copy(string * s) {
   return (cstring(s->str));
 }
 
+
 string * substr(string * s, int i) {
   // Assert Pointer Validity
   assert((s) && (s->str));
