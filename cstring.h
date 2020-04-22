@@ -19,23 +19,23 @@ typedef struct string {
 // End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Structure Map Functions
-void _add_struct(string * s)
-void _remove_struct(string * s)
+void _add_struct(string * s);
+void _remove_struct(string * s);
 
 // String Structure Functions
-string * cstring(char * init_c)
-int len(string * s)
-int cap(string * s)
-char * str(string * s)
+string * cstring(char * init_c);
+int len(string * s);
+int cap(string * s);
+char * str(string * s);
 
 // Memory Management Functions
-void clear(string * s)
-void delete(string * s)
-void delete_all(void)
+void clear(string * s);
+void delete(string * s);
+void delete_all(void);
 
 // String Duplication Functions
-string * copy(string * s)
-string * substr(string * s, int i)
+string * copy(string * s);
+string * substr(string * s, int i);
 string * substrn(string * s, int i, int j);
 
 // String Manipulation Functions
