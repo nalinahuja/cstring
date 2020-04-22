@@ -2,15 +2,14 @@
 #include "cstring.h"
 
 int main() {
-  string * newstring = cstring(NULL);
+  string * a = cstring(NULL);
+  string * b = cstring("asdf");
+  string * c = substrn(b, 1, 2);
 
-  append(newstring, "hello");
-  append(newstring, "world");
-  insert(newstring, " ", 5);
-  int index = find(newstring, "el");
+  string * cpy = copy(a);
 
-  string * s = substr(newstring, 1);
-
-  printf("%d\n", index);
-  printf("%s\n", newstring->str);
+  printf("%s\n", str(a));
+  printf("%s\n", str(b));
+  printf("%s\n", str(c));
+  // delete_all();
 }
