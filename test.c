@@ -4,7 +4,7 @@
 int main() {
   string * new_string = cstring(NULL);
 
-  append(new_string, "world");
+  bool i = append(new_string, "world");
   prepend(new_string, "hello ");
 
   string * subst = substrn(new_string, 1, 4);
