@@ -194,7 +194,6 @@ void delete_all(void) {
   // Free Allocs
   for (int i = 0; i < max_allocs; i++) {
     if (allocs[i]) {
-      printf("freed");
       // Free String Memory
       free(allocs[i]->str);
       allocs[i]->str = NULL;
