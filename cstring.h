@@ -164,6 +164,7 @@ void delete(string * s) {
 }
 
 void delete_all() {
+  // Free Allocs
   for (int i = 0; i < max_allocs; i++) {
     if (allocs[i]) {
       // Free String Memory
@@ -175,6 +176,10 @@ void delete_all() {
       allocs[i] = NULL;
     }
   }
+
+  // Free Map Memory
+  free(allocs);
+  allocs = NULL;
 }
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
