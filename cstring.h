@@ -414,8 +414,7 @@ bool set(string * s, int i, char c) {
 
 static void cstring_init(void) {
   // Create Allocs Array
-  num_allocs = 0;
-  max_allocs = CSTRING_ALLOC;
+  max_allocs = CSTRING_ALLOC, num_allocs = 0;
   allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
   assert(allocs);
 
