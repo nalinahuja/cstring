@@ -377,9 +377,9 @@ bool set(string * s, int i, char c) {
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
-static void init (void) __attribute__ ((constructor));
+static void cstring_init (void) __attribute__ ((constructor));
 
-static void init(void) {
+static void cstring_init(void) {
   // Create Allocs Array
   num_allocs = 0;
   max_allocs = CSTRING_ALLOC;
