@@ -17,6 +17,74 @@ typedef struct string {
 
 // End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
 
+int max_allocs, num_allocs;
+string ** allocs = NULL;
+
+void _add_struct(string * s) {
+  // Assert Pointer Validity
+  assert(s);
+
+  // Create Allocs Array
+  if (!allocs) {
+    num_allocs = 0;
+    max_allocs = CSTRING_ALLOC;
+    allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
+    assert(allocs);
+  }
+
+  // Add Structure To Allocs
+  if ((num_allocs + 1) != max_allocs) {
+    for (int i = 0; i < max_allocs; i++) {
+      if (!allocs[i]) {
+        num_allocs = i;
+        allocs[i] = s;
+        break;
+      }
+    }
+  } else {
+    // Create Resized Allocs Array
+    string ** temp_allocs = (string **) calloc(sizeof(string *), max_allocs * 2);
+    max_allocs = max_allocs * 2;
+    assert(temp_allocs);
+
+    // Copy Over Alloc Data To Resized Array
+    for (int i = 0; i < max_allocs; i++) {
+      temp_allocs[i] = allocs[i];
+    }
+
+    // Free Alloc Data
+    free(allocs);
+    allocs = temp_allocs;
+
+    // Retry Add Operation
+    _add_struct(s);
+  }
+}
+
+void _remove_struct(string * s) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Find String Structure
+  for (int i = 0; i < num_allocs; i++) {
+    if (allocs[i] == s) {
+      // Free String Memory
+      free(s->str);
+      s->str = NULL;
+
+      // Free Structure Memory
+      free(s);
+      s = NULL;
+
+      // Open Alloc Index
+      allocs[i] = NULL;
+      break;
+    }
+  }
+}
+
+// End Structure Map-------------------------------------------------------------------------------------------------------------------------------------------------------
+
 string * cstring(char * init_c) {
   // Calculate Memory Requirements
   size_t init_size = CSTRING_ALLOC;
@@ -38,6 +106,9 @@ string * cstring(char * init_c) {
 
   // Assert Pointer Validity
   assert((s) && (s->str));
+
+  // Add Structure To Map
+  _add_struct(s);
 
   // Copy String To Structure
   if (init_c) {
@@ -88,20 +159,13 @@ void clear(string * s) {
 }
 
 void delete(string * s) {
-  // Assert Pointer Validity
-  assert((s) && (s->str));
-
-  // Free String Memory
-  free(s->str);
-  s->str = NULL;
-
-  // Free Structure Memory
-  free(s);
-  s = NULL;
+  _remove_struct(s);
 }
 
 void delete_all() {
-  // implement
+  for (int i = 0; i < num_allocs; i++) {
+
+  }
 }
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
