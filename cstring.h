@@ -18,7 +18,7 @@ typedef struct string {
 
 // End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
 
-static void cstring_init (void) __attribute__ ((constructor));
+static void cstring_init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
