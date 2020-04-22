@@ -25,14 +25,6 @@ void _add_struct(string * s) {
   // Assert Pointer Validity
   assert(s);
 
-  // Create Allocs Array
-  if (!allocs) {
-    num_allocs = 0;
-    max_allocs = CSTRING_ALLOC;
-    allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
-    assert(allocs);
-  }
-
   // Add Structure To Allocs
   if ((num_allocs + 1) != max_allocs) {
     for (int i = 0; i < max_allocs; i++) {
@@ -163,13 +155,15 @@ void delete(string * s) {
   s = NULL;
 }
 
-void delete_all() {
+void delete_all(void) {
   // Free Allocs
   for (int i = 0; i < max_allocs; i++) {
     if (allocs[i]) {
       // Free String Memory
       free(allocs[i]->str);
       allocs[i]->str = NULL;
+
+      printf("freeed\n");
 
       // Free Structure Memory
       free(allocs[i]);
@@ -382,3 +376,18 @@ bool set(string * s, int i, char c) {
 }
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
+
+static void init (void) __attribute__ ((constructor));
+
+static void init(void) {
+  // Create Allocs Array
+  num_allocs = 0;
+  max_allocs = CSTRING_ALLOC;
+  allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
+  assert(allocs);
+
+  // Set Exit Routine
+  atexit(delete_all);
+}
+
+// End Initializer Function------------------------------------------------------------------------------------------------------------------------------------------------
