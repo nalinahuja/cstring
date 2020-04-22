@@ -119,14 +119,14 @@ string * cstring(char * init_c) {
   string * s = (string *) calloc(sizeof(string), 1);
 
   // Set Structure Members
-  if (init_c) {
-    s->str = init_c;
-  } else {
-    s->str = (char *) calloc(sizeof(char), init_size);
-  }
-
+  s->str = (char *) calloc(sizeof(char), init_size);
   s->cap = init_size;
   s->len = req_len;
+
+  // Copy String To Structure
+  if (init_c) {
+    strcpy(s->str, init_c);
+  }
 
   // Assert Pointer Validity
   assert((s) && (s->str));
@@ -198,8 +198,6 @@ void delete_all(void) {
       free(allocs[i]->str);
       allocs[i]->str = NULL;
 
-      printf("freeed\n");
-
       // Free Structure Memory
       free(allocs[i]);
       allocs[i] = NULL;
@@ -217,15 +215,8 @@ string * copy(string * s) {
   // Assert Pointer Validity
   assert((s) && (s->str));
 
-  // Duplicate String
-  char * sdup = strdup(s->str);
-
-  // Return Duplicate String Structure
-  if (sdup) {
-    return (cstring(sdup));
-  } else {
-    return (NULL);
-  }
+  // Return Duplicate String
+  return (cstring(s->str));
 }
 
 string * substr(string * s, int i) {
@@ -237,15 +228,8 @@ string * substr(string * s, int i) {
     return (NULL);
   }
 
-  // Duplicate String
-  char * sdup = strdup(s->str + i);
-
-  // Return Duplicate String Structure
-  if (sdup) {
-    return (cstring(sdup));
-  } else {
-    return (NULL);
-  }
+  // Return Duplicate String From [i, len)
+  return (cstring(s->str + i));
 }
 
 string * substrn(string * s, int i, int j) {
@@ -255,15 +239,20 @@ string * substrn(string * s, int i, int j) {
   // Range Check Indices
   if ((i >= 0) && (j <= s->len) && (i < j)) {
     // Duplicate String
-    char * sdup = strdup(s->str + i);
+    char * sdup = s->str + i;
+    char rem_c = sdup[j - i];
 
-    if (sdup) {
-      // Set Null Terminator
-      sdup[j - i] = 0;
+    // Set Null Terminator
+    sdup[j - i] = 0;
 
-      // Return Substring
-      return (cstring(sdup));
-    }
+    // Create Substring
+    string * sub = (cstring(sdup));
+
+    // Unset Null Terminator
+    sdup[j - i] = rem_c;
+
+    // Return Duplicate String From [i, j)
+    return sub;
   }
 
   return (NULL);
