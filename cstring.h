@@ -194,6 +194,7 @@ void delete_all(void) {
   // Free Allocs
   for (int i = 0; i < max_allocs; i++) {
     if (allocs[i]) {
+      printf("freed");
       // Free String Memory
       free(allocs[i]->str);
       allocs[i]->str = NULL;
@@ -252,7 +253,7 @@ string * substrn(string * s, int i, int j) {
     sdup[j - i] = rem_c;
 
     // Return Duplicate String From [i, j)
-    return sub;
+    return (sub);
   }
 
   return (NULL);
@@ -402,7 +403,7 @@ bool set(string * s, int i, char c) {
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
 static void cstring_init(void) {
-  // Create Allocs Array
+  // Create Allocs
   max_allocs = CSTRING_ALLOC, num_allocs = 0;
   allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
   assert(allocs);
