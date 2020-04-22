@@ -5,6 +5,7 @@
 
 #define CSTRING_SUC (1)
 #define CSTRING_ERR (0)
+#define CSTRING_EOL (-1)
 #define CSTRING_ALLOC (15)
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
@@ -312,9 +313,14 @@ bool concat(string * s1, string * s2) {
 
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
 
-string * find(string * s, char * c) {
+int find(string * s, char * c) {
+  char * pos = strstr(s->str, c);
 
-  return 0;
+  if (pos) {
+    return (int) (pos - (s->str));
+  } else {
+    return (CSTRING_EOL);
+  }
 }
 
 char get(string * s, int i) {
