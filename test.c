@@ -11,4 +11,5 @@ int main() {
   printf("%s\n", str(a));
   printf("%s\n", str(b));
   printf("%s\n", str(c));
+  delete_all();
 }

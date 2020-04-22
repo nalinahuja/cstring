@@ -29,6 +29,13 @@ void _add_struct(string * s) {
   // Assert Pointer Validity
   assert(s);
 
+  // Create Allocs
+  if (!allocs) {
+    max_allocs = CSTRING_ALLOC, num_allocs = 0;
+    allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
+    assert(allocs);
+  }
+
   // Add Structure To Allocs
   if ((num_allocs + 1) != max_allocs) {
     for (int i = 0; i < max_allocs; i++) {
@@ -371,13 +378,9 @@ bool set(string * s, int i, char c) {
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
 static void cstring_init(void) {
-  // Create Allocs
-  max_allocs = CSTRING_ALLOC, num_allocs = 0;
-  allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
-  assert(allocs);
-
-  // Set Exit Routine
-  atexit(delete_all);
+  if (allocs) {
+    atexit(delete_all);
+  }
 }
 
 // End Initializer Function------------------------------------------------------------------------------------------------------------------------------------------------
