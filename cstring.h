@@ -24,9 +24,9 @@ void _remove_struct(string * s);
 
 // String Structure Functions
 string * cstring(char * init_c);
+char * str(string * s);
 int len(string * s);
 int cap(string * s);
-char * str(string * s);
 
 // Memory Management Functions
 void clear(string * s);
@@ -40,9 +40,9 @@ string * substrn(string * s, int i, int j);
 
 // String Manipulation Functions
 bool insert(string * s, char * c, int ins);
-bool append(string * s, char * c);
-bool prepend(string * s, char * c);
 bool concat(string * s1, string * s2);
+bool prepend(string * s, char * c);
+bool append(string * s, char * c);
 int find(string * s, char * c);
 char get(string * s, int i);
 char rem(string * s, int i);
