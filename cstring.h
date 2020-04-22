@@ -68,15 +68,6 @@ void _remove_struct(string * s) {
   // Find String Structure
   for (int i = 0; i < num_allocs; i++) {
     if (allocs[i] == s) {
-      // Free String Memory
-      free(s->str);
-      s->str = NULL;
-
-      // Free Structure Memory
-      free(s);
-      s = NULL;
-
-      // Open Alloc Index
       allocs[i] = NULL;
       break;
     }
@@ -159,12 +150,29 @@ void clear(string * s) {
 }
 
 void delete(string * s) {
+  // Remove Structure From Map
   _remove_struct(s);
+
+  // Free String Memory
+  free(s->str);
+  s->str = NULL;
+
+  // Free Structure Memory
+  free(s);
+  s = NULL;
 }
 
 void delete_all() {
   for (int i = 0; i < num_allocs; i++) {
+    if (allocs[i]) {
+      // Free String Memory
+      free(allocs[i]->str);
+      allocs[i]->str = NULL;
 
+      // Free Structure Memory
+      free(allocs[i]);
+      allocs[i] = NULL;
+    }
   }
 }
 

@@ -13,7 +13,6 @@ int main() {
   printf("%s\n", new_string->str);
   printf("%s\n", subst->str);
 
-
   delete(subst);
   delete(new_string);
 }
