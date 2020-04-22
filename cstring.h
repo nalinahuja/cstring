@@ -167,22 +167,24 @@ void delete(string * s) {
 }
 
 void delete_all(void) {
-  // Free Allocs
-  for (int i = 0; i < max_allocs; i++) {
-    if (allocs[i]) {
-      // Free String Memory
-      free(allocs[i]->str);
-      allocs[i]->str = NULL;
+  if (allocs) {
+    // Free Allocs
+    for (int i = 0; i < max_allocs; i++) {
+      if (allocs[i]) {
+        // Free String Memory
+        free(allocs[i]->str);
+        allocs[i]->str = NULL;
 
-      // Free Structure Memory
-      free(allocs[i]);
-      allocs[i] = NULL;
+        // Free Structure Memory
+        free(allocs[i]);
+        allocs[i] = NULL;
+      }
     }
-  }
 
-  // Free Map Memory
-  free(allocs);
-  allocs = NULL;
+    // Free Map Memory
+    free(allocs);
+    allocs = NULL;
+  }
 }
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
@@ -378,9 +380,7 @@ bool set(string * s, int i, char c) {
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
 static void cstring_init(void) {
-  if (allocs) {
-    atexit(delete_all);
-  }
+  atexit(delete_all);
 }
 
 // End Initializer Function------------------------------------------------------------------------------------------------------------------------------------------------
