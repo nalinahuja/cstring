@@ -1,9 +1,10 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
-#define CSTRING_NSET (0)
-#define CSTRING_ERROR (0)
+#define CSTRING_SUC (1)
+#define CSTRING_ERR (0)
 #define CSTRING_ALLOC (15)
 
 // End Includes and Definitions----------------------------------------------------------------------------------------------------------------------------------------------
@@ -19,7 +20,7 @@ typedef struct string {
 string * cstring(char * init_c) {
   // Calculate Memory Requirements
   size_t init_size = CSTRING_ALLOC;
-  int req_len = CSTRING_NSET;
+  int req_len;
 
   // Extend Memory For Init String
   if (init_c) {
@@ -72,7 +73,7 @@ char * str(string * s) {
 
 // End Field Access Functions----------------------------------------------------------------------------------------------------------------------------------------------
 
-void clear(string * s) {
+bool clear(string * s) {
   // Assert Pointer Validity
   assert((s) && (s->str));
 
@@ -81,6 +82,8 @@ void clear(string * s) {
 
   // Reset String Length
   s->len = 0;
+
+  return ();
 }
 
 void delete(string * s) {
@@ -222,7 +225,7 @@ char get(string * s, int i) {
 
   // Range Check Index
   if ((i < 0) || (i >= s->len)) {
-    return (CSTRING_ERROR);
+    return (CSTRING_ERR);
   }
 
   // Return ith Character In String
@@ -246,7 +249,7 @@ char rem(string * s, int rem) {
 
   // Range Check Index
   if ((rem < 0) || (rem >= s->len)) {
-    return (CSTRING_ERROR);
+    return (CSTRING_ERR);
   }
 
   // Store Removed Character For Return
