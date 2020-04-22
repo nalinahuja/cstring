@@ -7,6 +7,7 @@ int main() {
   append(new_string, "world");
   prepend(new_string, "hello ");
 
+  rem(new_string, 0);
   string * subst = substrn(new_string, 1, 4);
 
   printf("%s\n", new_string->str);

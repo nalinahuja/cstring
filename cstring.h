@@ -239,28 +239,28 @@ char get(string * s, int i) {
   return (s->str[i]);
 }
 
-char rem(string * s, int r) {
+char rem(string * s, int i) {
   // Assert Pointer Validity
   assert((s) && (s->str));
 
   // Range Check Index
-  if ((r < 0) || (r >= s->len)) {
+  if ((i < 0) || (i >= s->len)) {
     return (CSTRING_ERR);
   }
 
   // Store Removed Character For Return
-  char rc = s->str[r];
+  char rem_c = s->str[i];
 
   // Left Shift String
-  for (int i = r; i < s->len; i++) {
-    s->str[i] = s->str[i + 1];
+  for (int j = i; j < s->len; j++) {
+    s->str[j] = s->str[j + 1];
   }
 
   // Update String Length
   s->len -= 1;
 
   // Return Removed Character
-  return (rc);
+  return (rem_c);
 }
 
 bool set(string * s, int i, char c) {
