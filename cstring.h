@@ -18,6 +18,41 @@ typedef struct string {
 
 // End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
 
+// Structure Map Functions
+void _add_struct(string * s)
+void _remove_struct(string * s)
+
+// String Structure Functions
+string * cstring(char * init_c)
+int len(string * s)
+int cap(string * s)
+char * str(string * s)
+
+// Memory Management Functions
+void clear(string * s)
+void delete(string * s)
+void delete_all(void)
+
+// String Duplication Functions
+string * copy(string * s)
+string * substr(string * s, int i)
+string * substrn(string * s, int i, int j);
+
+// String Manipulation Functions
+bool insert(string * s, char * c, int ins);
+bool append(string * s, char * c);
+bool prepend(string * s, char * c);
+bool concat(string * s1, string * s2);
+int find(string * s, char * c);
+char get(string * s, int i);
+char rem(string * s, int i);
+bool set(string * s, int i, char c);
+
+// Initializer Function
+static void cstring_init (void) __attribute__ ((constructor));
+
+// End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
+
 int max_allocs, num_allocs;
 string ** allocs = NULL;
 
@@ -376,8 +411,6 @@ bool set(string * s, int i, char c) {
 }
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
-
-static void cstring_init (void) __attribute__ ((constructor));
 
 static void cstring_init(void) {
   // Create Allocs Array
