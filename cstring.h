@@ -91,7 +91,12 @@ string * cstring(char * init_c) {
   string * s = (string *) calloc(sizeof(string), 1);
 
   // Set Structure Members
-  s->str = (char *) calloc(sizeof(char), init_size);
+  if (init_c) {
+    s->str = init_c;
+  } else {
+    s->str = (char *) calloc(sizeof(char), init_size);
+  }
+
   s->cap = init_size;
   s->len = req_len;
 
@@ -100,11 +105,6 @@ string * cstring(char * init_c) {
 
   // Add Structure To Map
   _add_struct(s);
-
-  // Copy String To Structure
-  if (init_c) {
-    strcpy(s->str, init_c);
-  }
 
   // Return Structure Pointer
   return s;
@@ -182,8 +182,15 @@ string * copy(string * s) {
   // Assert Pointer Validity
   assert((s) && (s->str));
 
+  // Duplicate String
+  char * sdup = strdup(s->str);
+
   // Return Duplicate String Structure
-  return (cstring(strdup(s->str)));
+  if (sdup) {
+    return (cstring(sdup));
+  } else {
+    return (NULL);
+  }
 }
 
 string * substr(string * s, int i) {
@@ -195,8 +202,15 @@ string * substr(string * s, int i) {
     return (NULL);
   }
 
-  // Substring From ith Character
-  return (cstring(strdup(s->str + i)));
+  // Duplicate String
+  char * sdup = strdup(s->str + i);
+
+  // Return Duplicate String Structure
+  if (sdup) {
+    return (cstring(sdup));
+  } else {
+    return (NULL);
+  }
 }
 
 string * substrn(string * s, int i, int j) {
@@ -206,14 +220,18 @@ string * substrn(string * s, int i, int j) {
   // Range Check Indices
   if ((i >= 0) && (j <= s->len) && (i < j)) {
     // Duplicate String
-    char * dup = strdup(s->str + i);
-    dup[j - i] = 0;
+    char * sdup = strdup(s->str + i);
 
-    // Return Substring
-    return (cstring(dup));
-  } else {
-    return (NULL);
+    if (sdup) {
+      // Set Null Terminator
+      sdup[j - i] = 0;
+
+      // Return Substring
+      return (cstring(sdup));
+    }
   }
+
+  return (NULL);
 }
 
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
@@ -257,6 +275,7 @@ bool insert(string * s, char * c, int ins) {
     // Extend Memory
     int new_cap = req_mem + CSTRING_ALLOC;
     char * new_str = (char *) calloc(sizeof(char), new_cap);
+    assert(new_str);
 
     // Copy Old Memory Contents To New Memory
     for (int i = 0; i < s->len; i++) {
@@ -293,8 +312,8 @@ bool concat(string * s1, string * s2) {
 
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
 
-int find(string * s, char * c) {
-  // implement
+string * find(string * s, char * c) {
+
   return 0;
 }
 
