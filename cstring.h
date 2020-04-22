@@ -96,6 +96,10 @@ void delete(string * s) {
   s = NULL;
 }
 
+void delete_all() {
+  // implement
+}
+
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
 
 string * copy(string * s) {
@@ -142,10 +146,8 @@ void insert(string * s, char * c, int ins) {
   // Assert Pointer Validity
   assert((s) && (s->str) && (c));
 
-  // Range Check Index
-  if ((ins < 0) || (ins > s->len)) {
-    return;
-  }
+  // Assert Range
+  assert((ins < 0) || (ins > s->len));
 
   // Calculate Length Of Request
   int req_len = strlen(c);
@@ -210,6 +212,10 @@ void concat(string * s1, string * s2) {
 
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
 
+int find(string * s, char * c) {
+  // implement
+}
+
 char get(string * s, int i) {
   // Assert Pointer Validity
   assert((s) && (s->str));
@@ -221,6 +227,17 @@ char get(string * s, int i) {
 
   // Return ith Character In String
   return (s->str[i]);
+}
+
+void set(string * s, int i, char c) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Assert Range
+  assert((i < 0) || (i >= s->len));
+
+  // Set ith Character In String
+  s->str[i] = c;
 }
 
 char rem(string * s, int rem) {
@@ -245,19 +262,6 @@ char rem(string * s, int rem) {
 
   // Return Removed Character
   return (rem_c);
-}
-
-void set(string * s, int i, char c) {
-  // Assert Pointer Validity
-  assert((s) && (s->str));
-
-  // Range Check Index
-  if ((i < 0) || (i >= s->len)) {
-    return;
-  }
-
-  // Set ith Character In String
-  s->str[i] = c;
 }
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
