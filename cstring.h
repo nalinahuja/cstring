@@ -18,6 +18,10 @@ typedef struct string {
 
 // End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
 
+static void cstring_init (void) __attribute__ ((constructor));
+
+// End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
+
 int max_allocs, num_allocs;
 string ** allocs = NULL;
 
@@ -365,8 +369,6 @@ bool set(string * s, int i, char c) {
 }
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
-
-static void cstring_init (void) __attribute__ ((constructor));
 
 static void cstring_init(void) {
   // Create Allocs
