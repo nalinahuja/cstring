@@ -239,6 +239,30 @@ char get(string * s, int i) {
   return (s->str[i]);
 }
 
+char rem(string * s, int r) {
+  // Assert Pointer Validity
+  assert((s) && (s->str));
+
+  // Range Check Index
+  if ((r < 0) || (r >= s->len)) {
+    return (CSTRING_ERR);
+  }
+
+  // Store Removed Character For Return
+  char rc = s->str[r];
+
+  // Left Shift String
+  for (int i = r; i < s->len; i++) {
+    s->str[i] = s->str[i + 1];
+  }
+
+  // Update String Length
+  s->len -= 1;
+
+  // Return Removed Character
+  return (rc);
+}
+
 bool set(string * s, int i, char c) {
   // Assert Pointer Validity
   assert((s) && (s->str));
@@ -253,30 +277,6 @@ bool set(string * s, int i, char c) {
 
   // Return Success
   return (CSTRING_SUC);
-}
-
-char rem(string * s, int rem) {
-  // Assert Pointer Validity
-  assert((s) && (s->str));
-
-  // Range Check Index
-  if ((rem < 0) || (rem >= s->len)) {
-    return (CSTRING_ERR);
-  }
-
-  // Store Removed Character For Return
-  char rem_c = s->str[rem];
-
-  // Left Shift String
-  for (int i = rem; i < s->len; i++) {
-    s->str[i] = s->str[i + 1];
-  }
-
-  // Update String Length
-  s->len -= 1;
-
-  // Return Removed Character
-  return (rem_c);
 }
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------

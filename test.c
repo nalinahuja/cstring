@@ -4,13 +4,14 @@
 int main() {
   string * new_string = cstring(NULL);
 
-  bool i = append(new_string, "world");
+  append(new_string, "world");
   prepend(new_string, "hello ");
 
   string * subst = substrn(new_string, 1, 4);
 
   printf("%s\n", new_string->str);
   printf("%s\n", subst->str);
+
 
   delete(subst);
   delete(new_string);
