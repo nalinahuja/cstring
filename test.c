@@ -14,5 +14,4 @@ int main() {
   printf("%s\n", str(b));
   printf("%s\n", str(c));
   printf("%s\n", str(cpy));
-  delete_all();
 }
