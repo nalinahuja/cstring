@@ -6,7 +6,7 @@
 #define CSTRING_SUC (1)
 #define CSTRING_ERR (0)
 #define CSTRING_EOL (-1)
-#define CSTRING_ALLOC (15)
+#define CSTRING_ALC (15)
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -31,8 +31,8 @@ void _add_struct(string * s) {
 
   // Create Allocs
   if (!allocs) {
-    max_allocs = CSTRING_ALLOC, num_allocs = 0;
-    allocs = (string **) calloc(sizeof(string *), CSTRING_ALLOC);
+    max_allocs = CSTRING_ALC, num_allocs = 0;
+    allocs = (string **) calloc(sizeof(string *), CSTRING_ALC);
     assert(allocs);
   }
 
@@ -82,7 +82,7 @@ void _remove_struct(string * s) {
 
 string * cstring(char * init_c) {
   // Calculate Memory Requirements
-  size_t init_size = CSTRING_ALLOC;
+  size_t init_size = CSTRING_ALC;
   int req_len;
 
   // Extend Memory For Init String
@@ -275,7 +275,7 @@ bool insert(string * s, char * c, int ins) {
     s->len += req_len;
   } else {
     // Extend Memory
-    int new_cap = req_mem + CSTRING_ALLOC;
+    int new_cap = req_mem + CSTRING_ALC;
     char * new_str = (char *) calloc(sizeof(char), new_cap);
     assert(new_str);
 
