@@ -4,7 +4,8 @@
 int main() {
   string * new = cstring(NULL);
 
-  append(new, "hello");
+  append(new, ", world")
+  prepend(new, "hello");
 
   printf("%s\n", str(new));
 }
