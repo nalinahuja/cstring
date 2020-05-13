@@ -6,7 +6,7 @@ int main() {
 
   append(new, ", world");
   prepend(new, "hello");
-  insert(new, "!", len(str));
+  insert(new, "!", len(new));
 
   printf("%s\n", str(new));
 }
