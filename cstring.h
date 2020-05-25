@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 #define CSTRING_SUC (1)
 #define CSTRING_ERR (0)
@@ -17,6 +18,10 @@ typedef struct string {
 } string;
 
 // End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
+
+static pthread_mutex_t mutex;
+
+// End Synchronization Mutex-----------------------------------------------------------------------------------------------------------------------------------------------
 
 static void cstring_init(void) __attribute__ ((constructor));
 
@@ -81,6 +86,9 @@ void _remove_struct(string * s) {
 // End Structure Map-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 string * cstring(char * init_c) {
+  // Lock Mutex
+  pthread_mutex_lock(&mutex);
+
   // Calculate Memory Requirements
   size_t init_size = CSTRING_ALC;
   int req_len;
@@ -109,6 +117,9 @@ string * cstring(char * init_c) {
 
   // Add Structure To Map
   _add_struct(s);
+
+  // Unlock Mutex
+  pthread_mutex_unlock(&mutex);
 
   // Return Structure Pointer
   return s;
@@ -380,6 +391,10 @@ bool set(string * s, int i, char c) {
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
 static void cstring_init(void) {
+  // Initialize Mutex Lock
+  pthread_mutex_init(&mutex, NULL);
+
+  // Set Exit Procedure
   atexit(delete_all);
 }
 
