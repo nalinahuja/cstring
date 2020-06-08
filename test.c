@@ -9,5 +9,13 @@ int main() {
   prepend(new, "hello");
   append(new, "!");
 
-  printf("%s\n", str(new));
+  printf("Len: %d\n", len(new));
+  printf("Cap: %d\n", cap(new));
+  printf("Str: %s\n", str(new));
+
+  string * cpy = copy(new);
+
+  printf("Len: %d\n", len(cpy));
+  printf("Cap: %d\n", cap(cpy));
+  printf("Str: %s\n", str(cpy));
 }

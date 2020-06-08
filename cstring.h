@@ -43,7 +43,7 @@ void _add_struct(string * s) {
 
   // Add Structure To Allocs
   if ((num_allocs + 1) != max_allocs) {
-    for (int i = 0; i < max_allocs; i++) {
+    for (int i = 0; i < max_allocs; ++i) {
       if (!allocs[i]) {
         num_allocs = i;
         allocs[i] = s;
@@ -57,7 +57,7 @@ void _add_struct(string * s) {
     assert(temp_allocs);
 
     // Copy Over Alloc Data To Resized Array
-    for (int i = 0; i < max_allocs; i++) {
+    for (int i = 0; i < max_allocs; ++i) {
       temp_allocs[i] = allocs[i];
     }
 
@@ -75,7 +75,7 @@ void _remove_struct(string * s) {
   assert((s) && (s->str));
 
   // Find String Structure
-  for (int i = 0; i < num_allocs; i++) {
+  for (int i = 0; i < max_allocs; ++i) {
     if (allocs[i] == s) {
       allocs[i] = NULL;
       break;
@@ -180,7 +180,7 @@ void delete(string * s) {
 void delete_all(void) {
   if (allocs) {
     // Free Allocs
-    for (int i = 0; i < max_allocs; i++) {
+    for (int i = 0; i < max_allocs; ++i) {
       if (allocs[i]) {
         // Free String Memory
         free(allocs[i]->str);
@@ -270,7 +270,7 @@ bool insert(string * s, char * c, int ins) {
     // Shift Required
     if (ins < s->len) {
       // Right Shift String
-      for (int i = 0; i < req_len; i++) {
+      for (int i = 0; i < req_len; ++i) {
         for (int j = s->len; j > ins; j--) {
           s->str[j + i] = s->str[j + i - 1];
         }
@@ -278,7 +278,7 @@ bool insert(string * s, char * c, int ins) {
     }
 
     // Copy Request String To Structure
-    for (int i = 0; i < req_len; i++) {
+    for (int i = 0; i < req_len; ++i) {
       s->str[ins + i] = c[i];
     }
 
@@ -291,7 +291,7 @@ bool insert(string * s, char * c, int ins) {
     assert(new_str);
 
     // Copy Old Memory Contents To New Memory
-    for (int i = 0; i < s->len; i++) {
+    for (int i = 0; i < s->len; ++i) {
       new_str[i] = s->str[i];
     }
 
