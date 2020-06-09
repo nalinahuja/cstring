@@ -187,7 +187,7 @@ inline void clear(string * s) {
   s->len = 0;
 }
 
-void delete(string * s) {
+inline void delete(string * s) {
   // Remove Structure From Map
   _remove_struct(s);
 
