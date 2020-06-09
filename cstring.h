@@ -98,8 +98,9 @@ void _remove_struct(string * s) {
   _verify((s) && (s->str), "[_remove_struct] one or more components of the structure are NULL");
 
   // Find String Structure
-  for (int i = 0; i < num_allocs; ++i) {
+  for (int i = 0; i < max_allocs; ++i) {
     if (allocs[i] == s) {
+      printf("del\n");
       allocs[i] = NULL;
       break;
     }
@@ -203,7 +204,7 @@ void delete(string * s) {
 void delete_all(void) {
   if (allocs) {
     // Free Allocs
-    for (int i = 0; i < num_allocs; ++i) {
+    for (int i = 0; i < max_allocs; ++i) {
       if (allocs[i]) {
         // Free String Memory
         free(allocs[i]->str);

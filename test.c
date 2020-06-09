@@ -9,7 +9,9 @@ int main() {
     append(new, "bruh");
     prepend(new, "asdfasdf");
     append(new, "bruh");
-    printf("%s", str(new));
-    delete(NULL);
+
+    printf("%s\n", str(new));
+
+    delete(new);
   }
 }
