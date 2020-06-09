@@ -9,7 +9,6 @@
 #define CSTRING_EOL (-1)
 #define CSTRING_ALC (15)
 
-// TODO, fix memory management code
 // TODO, create own assert function
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
@@ -191,7 +190,7 @@ void delete(string * s) {
 void delete_all(void) {
   if (allocs) {
     // Free Allocs
-    for (int i = 0; i < max_allocs; ++i) {
+    for (int i = 0; i < num_allocs; ++i) {
       if (allocs[i]) {
         // Free String Memory
         free(allocs[i]->str);
