@@ -85,7 +85,7 @@ void _remove_struct(string * s) {
 
 // End Structure Map-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-string * cstring(char * init_c) {
+string * cstring(char * init_str) {
   // Lock Mutex
   pthread_mutex_lock(&mutex);
 
@@ -94,8 +94,8 @@ string * cstring(char * init_c) {
   int req_len;
 
   // Extend Memory For Init String
-  if (init_c) {
-    req_len = strlen(init_c);
+  if (init_str) {
+    req_len = strlen(init_str);
     init_size += req_len;
   }
 
@@ -108,8 +108,8 @@ string * cstring(char * init_c) {
   s->len = req_len;
 
   // Copy String To Structure
-  if (init_c) {
-    strcpy(s->str, init_c);
+  if (init_str) {
+    strcpy(s->str, init_str);
   }
 
   // Assert Pointer Validity
