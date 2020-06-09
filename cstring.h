@@ -100,7 +100,6 @@ void _remove_struct(string * s) {
   // Find String Structure
   for (int i = 0; i < max_allocs; ++i) {
     if (allocs[i] == s) {
-      printf("del\n");
       allocs[i] = NULL;
       break;
     }

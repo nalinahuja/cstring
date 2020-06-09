@@ -12,6 +12,8 @@ int main() {
 
     printf("%s\n", str(new));
 
-    delete(new);
+    if (i > 5) {
+      delete(new);
+    }
   }
 }
