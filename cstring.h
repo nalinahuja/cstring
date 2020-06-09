@@ -86,14 +86,12 @@ void _remove_struct(string * s) {
   assert((s) && (s->str));
 
   // Find String Structure
-  for (int i = 0; i < max_allocs; ++i) {
+  for (int i = 0; i < num_allocs; ++i) {
     if (allocs[i] == s) {
       allocs[i] = NULL;
       break;
     }
   }
-
-  num_allocs--;
 }
 
 // End Structure Map-------------------------------------------------------------------------------------------------------------------------------------------------------
