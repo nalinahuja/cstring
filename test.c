@@ -7,15 +7,17 @@
 int main() {
   string * new = cstring(NULL);
 
-  append(new, ", world");
-  prepend(new, "hello");
-  append(new, "!");
+  for (int i = 0; i < 10; i++) {
+    append(new, ", world");
+    prepend(new, "hello");
+    append(new, "!");
 
-  printf("Len: %d\n", len(new));
-  printf("Cap: %d\n", cap(new));
-  printf("Str: %s\n", str(new));
+    printf("Len: %d\n", len(new));
+    printf("Cap: %d\n", cap(new));
+    printf("Str: %s\n", str(new));
 
-  delete(new);
+    clear(new);
+  }
 
   string * cpy = copy(new);
 
