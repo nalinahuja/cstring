@@ -37,36 +37,44 @@ void _add_struct(string * s) {
   // Assert Pointer Validity
   assert(s);
 
-  // Create Allocs
+  // Initialize Allocs Map
   if (!allocs) {
     max_allocs = CSTRING_ALC, num_allocs = 0;
     allocs = (string **) calloc(sizeof(string *), CSTRING_ALC);
     assert(allocs);
   }
 
-  // Add Structure To Allocs
-  if ((num_allocs + 1) != max_allocs) {
+  // Determine Available Space
+  if ((num_allocs + 1) < max_allocs) {
+    // Iterate Over Allocs Map
     for (int i = 0; i < max_allocs; ++i) {
       if (!allocs[i]) {
-        num_allocs = i;
+        // Update Num Allocs
+        if (i > num_allocs) {
+          num_allocs = i
+        }
+
+        // Add Structure To Allocs
         allocs[i] = s;
         break;
       }
     }
   } else {
-    // Create Resized Allocs Array
-    string ** temp_allocs = (string **) calloc(sizeof(string *), max_allocs * 2);
-    max_allocs = max_allocs * 2;
-    assert(temp_allocs);
+    // Update Space Requirements
+    max_allocs *= 2;
 
-    // Copy Over Alloc Data To Resized Array
-    for (int i = 0; i < max_allocs; ++i) {
-      temp_allocs[i] = allocs[i];
+    // Create Resized Allocs Array
+    string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs);
+    assert(new_allocs);
+
+    // Copy Alloc Data To Resized Array
+    for (int i = 0; i < (max_allocs / 2); ++i) {
+      new_allocs[i] = allocs[i];
     }
 
     // Free Alloc Data
     free(allocs);
-    allocs = temp_allocs;
+    allocs = new_allocs;
 
     // Retry Add Operation
     _add_struct(s);
@@ -84,6 +92,8 @@ void _remove_struct(string * s) {
       break;
     }
   }
+
+  num_allocs--;
 }
 
 // End Structure Map-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -183,7 +193,7 @@ void delete(string * s) {
 void delete_all(void) {
   if (allocs) {
     // Free Allocs
-    for (int i = 0; i < num_allocs; ++i) {
+    for (int i = 0; i < max_allocs; ++i) {
       if (allocs[i]) {
         // Free String Memory
         free(allocs[i]->str);
