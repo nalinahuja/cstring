@@ -27,9 +27,15 @@ static void _cstring_init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
-static void _verify(bool condition, char * msg) {
-  if (!condition) {
-    printf("cstring: %s\n", msg);
+void _verify(bool cmp, char * msg) {
+  if (!cmp) {
+    // Flush Output Streams
+    fflush(NULL);
+
+    // Display Error Message
+    printf("\ncstring: %s\n", msg);
+
+    // Exit Program
     exit(1);
   }
 }

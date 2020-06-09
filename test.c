@@ -2,8 +2,6 @@
 
 #include "cstring.h"
 
-// TODO, stress test the program and fix bugs
-
 int main() {
   for (int i = 0; i < 10; i++) {
     string * new = cstring("hello");
@@ -11,6 +9,7 @@ int main() {
     append(new, "bruh");
     prepend(new, "asdfasdf");
     append(new, "bruh");
-    delete(new);
+    printf("%s", str(new));
+    delete(NULL);
   }
 }
