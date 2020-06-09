@@ -9,8 +9,6 @@
 #define CSTRING_EOL (-1)
 #define CSTRING_ALC (15)
 
-// TODO, create own assert function
-
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
 typedef struct string {
