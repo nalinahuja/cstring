@@ -2,6 +2,8 @@
 
 #include "cstring.h"
 
+// TODO, stress test the program
+
 int main() {
   string * new = cstring(NULL);
 
@@ -12,6 +14,8 @@ int main() {
   printf("Len: %d\n", len(new));
   printf("Cap: %d\n", cap(new));
   printf("Str: %s\n", str(new));
+
+  delete(new);
 
   string * cpy = copy(new);
 
