@@ -2,7 +2,7 @@
 
 #include "cstring.h"
 
-// TODO, stress test the program
+// TODO, stress test the program and fix bugs
 
 int main() {
   string * new = cstring(NULL);
