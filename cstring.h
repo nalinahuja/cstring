@@ -23,7 +23,7 @@ static pthread_mutex_t mutex;
 
 // End Synchronization Mutex-----------------------------------------------------------------------------------------------------------------------------------------------
 
-static void cstring_init(void) __attribute__ ((constructor));
+static void _cstring_init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ void _remove_struct(string * s) {
   assert((s) && (s->str));
 
   // Find String Structure
-  for (int i = 0; i < num_allocs; ++i) {
+  for (int i = 0; i < max_allocs; ++i) {
     if (allocs[i] == s) {
       allocs[i] = NULL;
       break;
@@ -390,7 +390,7 @@ bool set(string * s, int i, char c) {
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
-static void cstring_init(void) {
+static void _cstring_init(void) {
   // Initialize Mutex Lock
   pthread_mutex_init(&mutex, NULL);
 
