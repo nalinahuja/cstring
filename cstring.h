@@ -91,7 +91,7 @@ string * cstring(char * init_str) {
 
   // Calculate Memory Requirements
   size_t init_size = CSTRING_ALC;
-  int req_len;
+  int req_len = 0;
 
   // Extend Memory For Init String
   if (init_str) {
@@ -122,7 +122,7 @@ string * cstring(char * init_str) {
   pthread_mutex_unlock(&mutex);
 
   // Return Structure Pointer
-  return s;
+  return (s);
 }
 
 // End String Initializer--------------------------------------------------------------------------------------------------------------------------------------------------
