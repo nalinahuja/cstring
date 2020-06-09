@@ -213,7 +213,7 @@ string * substr(string * s, int i) {
   assert((s) && (s->str));
 
   // Range Check Index
-  if ((i <= 0) || (i >= s->len)) {
+  if ((i < 0) || (i >= s->len)) {
     return (NULL);
   }
 

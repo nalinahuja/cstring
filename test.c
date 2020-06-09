@@ -7,21 +7,13 @@
 int main() {
   string * new = cstring(NULL);
 
-  for (int i = 0; i < 10; i++) {
-    append(new, ", world");
-    prepend(new, "hello");
-    append(new, "!");
+  append(new, "hello");
 
-    printf("Len: %d\n", len(new));
-    printf("Cap: %d\n", cap(new));
-    printf("Str: %s\n", str(new));
+  string * sub = substrn(new, 0, len(new) - 1);
 
-    clear(new);
-  }
+  append(sub, "bruh");
 
-  string * cpy = copy(new);
-
-  printf("Len: %d\n", len(cpy));
-  printf("Cap: %d\n", cap(cpy));
-  printf("Str: %s\n", str(cpy));
+  printf("Str: %s\n", str(sub));
+  printf("Len: %d\n", len(sub));
+  printf("Len: %d\n", cap(sub));
 }
