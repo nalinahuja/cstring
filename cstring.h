@@ -349,8 +349,10 @@ inline bool concat(string * s1, string * s2) {
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
 
 int find(string * s, char * c) {
+  // Get Character Position
   char * pos = strstr(s->str, c);
 
+  // Determine Position Validity
   if (pos) {
     return (int) (pos - (s->str));
   } else {
