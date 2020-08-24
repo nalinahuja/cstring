@@ -104,8 +104,8 @@ void _remove_struct(string * s) {
   _verify((s) && (s->str), "[_remove_struct] one or more components of the structure are NULL");
 
   // Find String Structure Via Index
-  if ((s->ind < max_allocs) && (allocs[s->ind]) && (allocs[i] == s)) {
-    allocs[i] = NULL;
+  if ((s->ind < max_allocs) && (allocs[s->ind]) && (allocs[s->ind] == s)) {
+    allocs[s->ind] = NULL;
     return;
   }
 
