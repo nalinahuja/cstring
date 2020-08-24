@@ -15,6 +15,7 @@ typedef struct string {
   char * str;
   int cap;
   int len;
+  int ind;
 } string;
 
 // End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -66,8 +67,13 @@ void _add_struct(string * s) {
           num_allocs = i;
         }
 
+        // Set Internal Structure Index
+        s->ind = i;
+
         // Add Structure To Allocs
         allocs[i] = s;
+
+        // End Insertion Operation
         break;
       }
     }
@@ -97,8 +103,15 @@ void _remove_struct(string * s) {
   // Assert Pointer Validity
   _verify((s) && (s->str), "[_remove_struct] one or more components of the structure are NULL");
 
-  // Find String Structure
+  // Find String Structure Via Index
+  if ((s->ind < max_allocs) && (allocs[s->ind]) && (allocs[s->ind] == s)) {
+    allocs[s->ind] = NULL;
+    return;
+  }
+
+  // Find String Structure Via Pointer
   for (int i = 0; i < max_allocs; ++i) {
+    // Remove Structure From Table On Match
     if (allocs[i] == s) {
       allocs[i] = NULL;
       break;
@@ -348,7 +361,7 @@ inline bool concat(string * s1, string * s2) {
 
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
 
-int find(string * s, char * c) {
+inline int find(string * s, char * c) {
   // Get Character Position
   char * pos = strstr(s->str, c);
 
@@ -360,7 +373,7 @@ int find(string * s, char * c) {
   }
 }
 
-char get(string * s, int i) {
+inline char get(string * s, int i) {
   // Assert Pointer Validity
   _verify((s) && (s->str), "[get] one or more components of the structure and or arguments to the function are NULL");
 
@@ -373,7 +386,7 @@ char get(string * s, int i) {
   return (s->str[i]);
 }
 
-char rem(string * s, int i) {
+inline char rem(string * s, int i) {
   // Assert Pointer Validity
   _verify((s) && (s->str), "[rem] one or more components of the structure and or arguments to the function are NULL");
 
@@ -397,7 +410,7 @@ char rem(string * s, int i) {
   return (rem_c);
 }
 
-bool set(string * s, int i, char c) {
+inline bool set(string * s, int i, char c) {
   // Assert Pointer Validity
   _verify((s) && (s->str), "[set] one or more components of the structure and or arguments to the function are NULL");
 
