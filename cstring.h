@@ -47,18 +47,18 @@ string ** allocs = NULL;
 
 void _add_struct(string * s) {
   // Assert Pointer Validity
-  _verify(s, "[_add_struct] failed to add string to map");
+  _verify(s, "[_add_struct] failed to add string to table");
 
-  // Initialize Allocs Map
+  // Initialize Allocs Table
   if (!allocs) {
     max_allocs = CSTRING_ALC, num_allocs = 0;
     allocs = (string **) calloc(sizeof(string *), CSTRING_ALC);
-    _verify(allocs, "[_add_struct] failed initialize structure map");
+    _verify(allocs, "[_add_struct] failed initialize structure table");
   }
 
   // Determine Available Space
   if ((num_allocs + 1) < max_allocs) {
-    // Iterate Over Allocs Map
+    // Iterate Over Allocs Table
     for (int i = 0; i < max_allocs; ++i) {
       if (!allocs[i]) {
         // Update Num Allocs
@@ -77,7 +77,7 @@ void _add_struct(string * s) {
 
     // Create Resized Allocs Array
     string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs);
-    _verify(new_allocs, "[_add_struct] failed to resize structure map");
+    _verify(new_allocs, "[_add_struct] failed to resize structure table");
 
     // Copy Alloc Data To Resized Array
     for (int i = 0; i < (max_allocs / 2); ++i) {
@@ -106,7 +106,7 @@ void _remove_struct(string * s) {
   }
 }
 
-// End Structure Map-------------------------------------------------------------------------------------------------------------------------------------------------------
+// End Structure Table-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 string * cstring(char * init_str) {
   // Lock Mutex
@@ -138,7 +138,7 @@ string * cstring(char * init_str) {
   // Assert Pointer Validity
   _verify((s) && (s->str), "[cstring] one or more components of the structure are NULL");
 
-  // Add Structure To Map
+  // Add Structure To Table
   _add_struct(s);
 
   // Unlock Mutex
@@ -188,7 +188,7 @@ inline void clear(string * s) {
 }
 
 inline void delete(string * s) {
-  // Remove Structure From Map
+  // Remove Structure From Table
   _remove_struct(s);
 
   // Free String Memory
@@ -215,7 +215,7 @@ void delete_all(void) {
       }
     }
 
-    // Free Map Memory
+    // Free Table Memory
     free(allocs);
     allocs = NULL;
   }
