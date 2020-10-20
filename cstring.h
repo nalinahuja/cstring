@@ -254,6 +254,10 @@ inline void delete(string * s) {
   s = NULL;
 }
 
+/*
+ * delete_all - frees memory of all strings
+ */
+
 void delete_all(void) {
   if (allocs) {
     // Free Allocs
