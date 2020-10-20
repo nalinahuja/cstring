@@ -18,7 +18,7 @@ typedef int int32;
 typedef unsigned int uint32;
 typedef unsigned char uint8;
 
-// String Struct Type
+// String Type
 typedef struct string {
   char * str;
   uint32 cap;
