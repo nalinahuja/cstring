@@ -132,6 +132,10 @@ void _remove_struct(string * s) {
 
 // End Structure Table-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+/*
+ * cstring - returns a new string
+ */
+
 string * cstring(char * istr) {
   // Lock Mutex
   pthread_mutex_lock(&mutex);
