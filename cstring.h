@@ -36,10 +36,10 @@ static void cstring_init(void) __attribute__ ((constructor));
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * cstring_verify - displays an error message if comparision fails
+ * verify - displays an error message if comparision fails
  */
 
-void cstring_verify(bool cmp, char * err_msg) {
+void verify(bool cmp, char * err_msg) {
   if (!(cmp)) {
     // Flush All Output Streams
     fflush(NULL);
@@ -64,7 +64,7 @@ string ** allocs = NULL;
 
 void add_alloc(string * s) {
   // Verify Arguments
-  cstring_verify(s, "[add_alloc] failed to add string allocation to table");
+  verify(s, "[add_alloc] failed to add string allocation to table");
 
   // Check Available Memory
   if ((num_allocs + 1) < max_allocs) {
@@ -94,7 +94,7 @@ void add_alloc(string * s) {
     string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs);
 
     // Verify Allocation Table
-    cstring_verify(new_allocs, "[add_alloc] failed to resize allocation table");
+    verify(new_allocs, "[add_alloc] failed to resize allocation table");
 
     // Copy Old Memory Contents To New Memory
     for (uint32 i = 0; i < (max_allocs / 2); ++i) {
@@ -116,7 +116,7 @@ void add_alloc(string * s) {
 
 void remove_alloc(string * s) {
   // Verify Arguments
-  cstring_verify((s) && (s->str), "[remove_alloc] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str), "[remove_alloc] arguments to the function or components of the string structure are null");
 
   // Remove String Structure By Index
   if ((s->ind < max_allocs) && (allocs[s->ind] == s)) {
@@ -175,7 +175,7 @@ string * cstring(char * istr) {
     }
 
     // Verify Arguments
-    cstring_verify((s) && (s->str), "[cstring] failed to initialize new structure");
+    verify((s) && (s->str), "[cstring] failed to initialize new structure");
   }
 
   // Copy String To Structure
@@ -201,7 +201,7 @@ string * cstring(char * istr) {
 
 inline int cap(string * s) {
   // Verify Arguments
-  cstring_verify(s, "[cap] the structure is null");
+  verify(s, "[cap] the structure is null");
 
   // Return String Capacity
   return (s->cap);
@@ -213,7 +213,7 @@ inline int cap(string * s) {
 
 inline int len(string * s) {
   // Verify Arguments
-  cstring_verify(s, "[len] the structure is null");
+  verify(s, "[len] the structure is null");
 
   // Return String Length
   return (s->len);
@@ -225,7 +225,7 @@ inline int len(string * s) {
 
 inline char * str(string * s) {
   // Verify Arguments
-  cstring_verify((s) && (s->str), "[str] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str), "[str] arguments to the function or components of the string structure are null");
 
   // Return String Pointer
   return (s->str);
@@ -239,7 +239,7 @@ inline char * str(string * s) {
 
 void clear(string * s) {
   // Verify Arguments
-  cstring_verify((s) && (s->str), "[clear] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str), "[clear] arguments to the function or components of the string structure are null");
 
   // Reset Contents Of String
   memset(s->str, 0, s->cap);
@@ -254,7 +254,7 @@ void clear(string * s) {
 
 void delete(string * s) {
   // Verify Arguments
-  cstring_verify(s, "[delete] the structure is null");
+  verify(s, "[delete] the structure is null");
 
   // Lock Mutex
   pthread_mutex_lock(&mutex);
@@ -314,7 +314,7 @@ void delete_all(void) {
 
 string * copy(string * s) {
   // Verify Arguments
-  cstring_verify((s) && (s->str), "[copy] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str), "[copy] arguments to the function or components of the string structure are null");
 
   // Return Copy Of String
   return (cstring(s->str));
@@ -326,7 +326,7 @@ string * copy(string * s) {
 
 string * substr(string * s, uint32 i) {
   // Verify Arguments
-  cstring_verify((s) && (s->str), "[substr] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str), "[substr] arguments to the function or components of the string structure are null");
 
   // Return Substring From [i, len(s)]
   return ((i >= s->len) ? (NULL) : (cstring(s->str + i)));
@@ -338,7 +338,7 @@ string * substr(string * s, uint32 i) {
 
 string * substrn(string * s, uint32 i, uint32 j) {
   // Verify Arguments
-  cstring_verify((s) && (s->str), "[substrn] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str), "[substrn] arguments to the function or components of the string structure are null");
 
   // Range Check Indices
   if ((i < j) && (j <= s->len)) {
@@ -373,7 +373,7 @@ string * substrn(string * s, uint32 i, uint32 j) {
 
 bool insert(string * s, char * c, uint32 k) {
   // Verify Arguments
-  cstring_verify((s) && (s->str) && (c), "[insert] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str) && (c), "[insert] arguments to the function or components of the string structure are null");
 
   // Verify Index Range
   if (k > (s->len)) {
@@ -415,7 +415,7 @@ bool insert(string * s, char * c, uint32 k) {
     char * new_str = (char *) calloc(sizeof(char), new_mem);
 
     // Verify New String Memory Space
-    cstring_verify(new_str, "[insert] failed to resize string memory space");
+    verify(new_str, "[insert] failed to resize string memory space");
 
     // Copy Old Memory Contents To New Memory
     for (int i = 0; i < s->len; i++) {
@@ -470,7 +470,7 @@ inline bool concat(string * s1, string * s2) {
 
 int32 find(string * s, char * c) {
   // Verify Arguments
-  cstring_verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
 
   // Get Substring Position
   char * pos = strstr(s->str, c);
@@ -485,7 +485,7 @@ int32 find(string * s, char * c) {
 
 uint8 get(string * s, uint32 i) {
   // Verify Arguments
-  cstring_verify((s) && (s->str), "[get] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str), "[get] arguments to the function or components of the string structure are null");
 
   // Return Character
   return ((i >= (s->len)) ? (CSTRING_ERR) : (s->str[i]));
@@ -497,7 +497,7 @@ uint8 get(string * s, uint32 i) {
 
 uint8 rem(string * s, uint32 i) {
   // Verify Arguments
-  cstring_verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
 
   // Verify Index Range
   if (i >= (s->len)) {
@@ -526,7 +526,7 @@ uint8 rem(string * s, uint32 i) {
 
 uint8 set(string * s, uint32 i, uint8 c) {
   // Verify Arguments
-  cstring_verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
+  verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
 
   // Verify Index Range
   if (i >= (s->len)) {
@@ -561,7 +561,7 @@ static void cstring_init(void) {
   allocs = (string **) calloc(sizeof(string *), max_allocs);
 
   // Verify Allocation Table
-  cstring_verify(allocs, "[init] failed initialize allocation table");
+  verify(allocs, "[init] failed initialize allocation table");
 
   // Set Exit Procedure
   atexit(delete_all);
