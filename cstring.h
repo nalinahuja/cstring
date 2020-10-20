@@ -31,7 +31,7 @@ static pthread_mutex_t mutex;
 
 // End Synchronization Resources-------------------------------------------------------------------------------------------------------------------------------------------
 
-static void _cstring_init(void) __attribute__ ((constructor));
+static void cstring_init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -509,7 +509,7 @@ unit8 set(string * s, uint32 i, uint8 c) {
  * _cstring_init - initializes cstring
  */
 
-static void _cstring_init(void) {
+static void cstring_init(void) {
   // Initialize Mutex Lock
   pthread_mutex_init(&mutex, NULL);
 
