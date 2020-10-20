@@ -14,6 +14,7 @@
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
 // Numerical Types
+typedef int int32;
 typedef unsigned int uint32;
 typedef unsigned char uint8;
 
@@ -456,7 +457,7 @@ inline bool concat(string * s1, string * s2) {
  * find - determines the position of substring
  */
 
-uint32 find(string * s, char * c) {
+int32 find(string * s, char * c) {
   // Verify Arguments
   _verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
 
