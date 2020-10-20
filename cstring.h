@@ -14,7 +14,6 @@
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
 // Numerical Types
-typedef int int32;
 typedef unsigned int uint32;
 typedef unsigned char uint8;
 
