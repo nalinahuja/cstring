@@ -295,31 +295,47 @@ string * substrn(string * s, int i, int j) {
   return (NULL);
 }
 
+/*
+ * find - determines the position of substring
+ */
+
+uint32 find(string * s, char * c) {
+  // Verify Arguments
+  _verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
+
+  // Get Substring Position
+  char * pos = strstr(s->str, c);
+
+  // Return Substring Position
+  return ((pos) ? (pos - (s->str) : (CSTRING_EOL));
+}
+
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
 
-bool insert(string * s, char * c, int ins) {
+bool insert(string * s, char * c, uint32 ins) {
   // Assert Pointer Validity
-  _verify((s) && (s->str) && (c), "[insert] one or more components of the structure and or arguments to the function are NULL");
+  _verify((s) && (s->str) && (c), "[insert] arguments to the function or components of the string structure are null");
 
-  // Assert Range
-  if ((ins < 0) || (ins > s->len)) {
+  // Verify Index Range
+  if (ins > (s->len)) {
     return (CSTRING_ERR);
   }
 
   // Calculate Length Of Request
-  int req_len = strlen(c);
+  uint32 req_len = strlen(c);
 
   // Calculate Memory Requirements
-  int str_mem = s->cap;
-  int req_mem = s->len + req_len;
+  uint32 str_mem = (s->cap);
+  uint32 req_mem = (s->len + req_len);
 
-  // Sufficient Memory
+  // Sufficient Memory Exists
   if (str_mem >= req_mem) {
     // Shift Required
     if (ins < s->len) {
-      // Right Shift String
-      for (int i = 0; i < req_len; ++i) {
-        for (int j = s->len; j > ins; j--) {
+      // Perform Right Shifts
+      for (uint32 i = 0; i < req_len; i++) {
+        // Right Shift String
+        for (uint32 j = s->len; j > ins; j--) {
           s->str[j + i] = s->str[j + i - 1];
         }
       }
@@ -330,7 +346,7 @@ bool insert(string * s, char * c, int ins) {
       s->str[ins + i] = c[i];
     }
 
-    // Adjust Structure Length
+    // Update String Length
     s->len += req_len;
   } else {
     // Extend Memory
@@ -384,21 +400,6 @@ inline bool concat(string * s1, string * s2) {
 }
 
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
-
-/*
- * find - determines the position of substring
- */
-
-uint32 find(string * s, char * c) {
-  // Verify Arguments
-  _verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
-
-  // Get Substring Position
-  char * pos = strstr(s->str, c);
-
-  // Return Substring Position
-  return ((pos) ? (pos - (s->str) : (CSTRING_EOL));
-}
 
 /*
  * get - gets the ith character in string
