@@ -295,21 +295,6 @@ string * substrn(string * s, int i, int j) {
   return (NULL);
 }
 
-/*
- * find - determines the position of substring
- */
-
-uint32 find(string * s, char * c) {
-  // Verify Arguments
-  _verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
-
-  // Get Substring Position
-  char * pos = strstr(s->str, c);
-
-  // Return Substring Position
-  return ((pos) ? (pos - (s->str) : (CSTRING_EOL));
-}
-
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
 
 /*
@@ -408,6 +393,21 @@ inline bool concat(string * s1, string * s2) {
 }
 
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
+
+/*
+ * find - determines the position of substring
+ */
+
+uint32 find(string * s, char * c) {
+  // Verify Arguments
+  _verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
+
+  // Get Substring Position
+  char * pos = strstr(s->str, c);
+
+  // Return Substring Position
+  return ((pos) ? (pos - (s->str) : (CSTRING_EOL));
+}
 
 /*
  * get - gets the ith character in string
