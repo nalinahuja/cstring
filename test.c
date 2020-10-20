@@ -3,6 +3,6 @@
 
 int main() {
  string *test = cstring("hello");
- insert(test, NULL, 0);
+ insert(test, "asdf", 0);
  printf("%s\n", test->str);
 }
