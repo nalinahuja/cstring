@@ -248,50 +248,60 @@ void delete_all(void) {
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
 
-string * copy(string * s) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[copy] one or more components of the structure are NULL");
+/*
+ * copy - returns a copy of indicated string
+ */
 
-  // Return Duplicate String
+string * copy(string * s) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[copy] arguments to the function or components of the string structure are null");
+
+  // Return Copy Of String
   return (cstring(s->str));
 }
 
-string * substr(string * s, int i) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[substr] one or more components of the structure are NULL");
+/*
+ * substr - returns a copy of indicated string from [i, len(s)]
+ */
 
-  // Range Check Index
-  if ((i < 0) || (i >= s->len)) {
-    return (NULL);
-  }
+string * substr(string * s, uint32 i) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[substr] arguments to the function or components of the string structure are null");
 
-  // Return Duplicate String From [i, len)
-  return (cstring(s->str + i));
+  // Return Substring From [i, len(s)]
+  return ((i >= s->len) ? (NULL) : (cstring(s->str + i)));
 }
 
-string * substrn(string * s, int i, int j) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[substrn] one or more components of the structure are NULL");
+/*
+ * substrn - returns a copy of indicated string from [i, j)
+ */
+
+string * substrn(string * s, uint32 i, uint32 j) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[substrn] arguments to the function or components of the string structure are null");
 
   // Range Check Indices
-  if ((i >= 0) && (j <= s->len) && (i < j)) {
-    // Duplicate String
-    char * sdup = s->str + i;
-    char rem_c = sdup[j - i];
+  if ((i < j) && (j <= s->len)) {
+    // Get Substring From ith Index
+    char * dup = (s->str + i);
+
+    // Store Removed Character
+    char rc = dup[j - i];
 
     // Set Null Terminator
-    sdup[j - i] = 0;
+    dup[j - i] = 0;
 
     // Create Substring
-    string * sub = (cstring(sdup));
+    string * sub = (cstring(dup));
 
     // Unset Null Terminator
-    sdup[j - i] = rem_c;
+    dup[j - i] = rc;
 
     // Return Duplicate String From [i, j)
     return (sub);
   }
 
+  // Return NULL Pointer
   return (NULL);
 }
 
@@ -302,7 +312,7 @@ string * substrn(string * s, int i, int j) {
  */
 
 bool insert(string * s, char * c, uint32 k) {
-  // Assert Pointer Validity
+  // Verify Arguments
   _verify((s) && (s->str) && (c), "[insert] arguments to the function or components of the string structure are null");
 
   // Verify Index Range
