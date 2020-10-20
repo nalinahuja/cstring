@@ -45,7 +45,7 @@ void _verify(bool cmp, char * err_msg) {
     fflush(NULL);
 
     // Display Error Message
-    kprintf("\ncstring: %s\n", err_msg);
+    printf("\ncstring: %s\n", err_msg);
 
     // Exit Program
     exit(1);
@@ -416,7 +416,7 @@ bool insert(string * s, char * c, uint32 k) {
 
     // Update String Members
     s->str = new_str;
-    s->cap = new_cap;
+    s->cap = new_mem;
 
     // Retry Insertion Operation
     insert(s, c, k);
@@ -464,7 +464,7 @@ uint32 find(string * s, char * c) {
   char * pos = strstr(s->str, c);
 
   // Return Substring Position
-  return ((pos) ? (pos - (s->str) : (CSTRING_EOL));
+  return ((pos) ? (pos - (s->str)) : (CSTRING_EOL));
 }
 
 /*
@@ -512,7 +512,7 @@ uint8 rem(string * s, uint32 i) {
  * set - sets the ith character in string
  */
 
-unit8 set(string * s, uint32 i, uint8 c) {
+uint8 set(string * s, uint32 i, uint8 c) {
   // Verify Arguments
   _verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
 
