@@ -402,7 +402,7 @@ inline char get(string * s, int i) {
  * get - removes the ith character in string
  */
 
-inline char rem(string * s, uint32 i) {
+char rem(string * s, uint32 i) {
   // Verify Arguments
   _verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
 
@@ -431,7 +431,7 @@ inline char rem(string * s, uint32 i) {
  * set - sets the ith character in string
  */
 
-inline bool set(string * s, uint32 i, uint8 c) {
+bool set(string * s, uint32 i, uint8 c) {
   // Verify Arguments
   _verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
 
@@ -440,11 +440,14 @@ inline bool set(string * s, uint32 i, uint8 c) {
     // Return Error
     return (CSTRING_ERR);
   } else {
+    // Store Overwritten Character
+    uint8 oc = s->str[i];
+
     // Set ith Character In String
     s->str[i] = c;
 
-    // Return Success
-    return (CSTRING_SUC);
+    // Return Overwritten Character
+    return (oc);
   }
 }
 
