@@ -116,17 +116,17 @@ void _add_struct(string * s) {
 
 void _remove_struct(string * s) {
   // Verify Arguments
-  _verify((s) && (s->str), "[_remove_struct] one or more components of the structure are NULL");
+  _verify((s) && (s->str), "[_remove_struct] arguments to the function or components of the string structure are null");
 
-  // Find String Structure Via Index
-  if ((s->ind < max_allocs) && (allocs[s->ind]) && (allocs[s->ind] == s)) {
+  // Remove String Structure By Index
+  if ((s->ind < max_allocs) && (allocs[s->ind] == s)) {
     allocs[s->ind] = NULL;
     return;
   }
 
-  // Find String Structure Via Pointer
-  for (int i = 0; i < max_allocs; ++i) {
-    // Remove Structure From Table On Match
+  // Remove String Structure Via Pointer
+  for (uint32 i = 0; i < max_allocs; ++i) {
+    // Remove Strucutre From Table
     if (allocs[i] == s) {
       allocs[i] = NULL;
       break;
