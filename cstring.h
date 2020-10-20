@@ -54,19 +54,12 @@ void _verify(bool cmp, char * err_msg) {
 
 // End Verify Function-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-int max_allocs, num_allocs;
+uint32 max_allocs, num_allocs;
 string ** allocs = NULL;
 
 void _add_struct(string * s) {
-  // Assert Pointer Validity
+  // Verify Arguments
   _verify(s, "[_add_struct] failed to add string to table");
-
-  // Initialize Allocs Table
-  if (!allocs) {
-    max_allocs = CSTRING_ALC, num_allocs = 0;
-    allocs = (string **) calloc(sizeof(string *), CSTRING_ALC);
-    _verify(allocs, "[_add_struct] failed initialize structure table");
-  }
 
   // Determine Available Space
   if ((num_allocs + 1) < max_allocs) {
@@ -111,7 +104,7 @@ void _add_struct(string * s) {
 }
 
 void _remove_struct(string * s) {
-  // Assert Pointer Validity
+  // Verify Arguments
   _verify((s) && (s->str), "[_remove_struct] one or more components of the structure are NULL");
 
   // Find String Structure Via Index
@@ -523,14 +516,21 @@ unit8 set(string * s, uint32 i, uint8 c) {
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * _cstring_init - initializes cstring
+ * cstring_init - initializes cstring program
  */
 
 static void cstring_init(void) {
   // Initialize Mutex Lock
   pthread_mutex_init(&mutex, NULL);
 
-  // TODO, setup memory table here
+  // Initialize Allocations Counters
+  max_allocs = CSTRING_ALC, num_allocs = 0;
+
+  // Initialize Allocation Table
+  allocs = (string **) calloc(sizeof(string *), max_allocs);
+
+  // Verify Allocation Table
+  _verify(allocs, "[_add_struct] failed initialize allocation table");
 
   // Set Exit Procedure
   atexit(delete_all);
