@@ -312,6 +312,10 @@ uint32 find(string * s, char * c) {
 
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
 
+/*
+ * insert - inserts a substring at kth index
+ */
+
 bool insert(string * s, char * c, uint32 k) {
   // Assert Pointer Validity
   _verify((s) && (s->str) && (c), "[insert] arguments to the function or components of the string structure are null");
