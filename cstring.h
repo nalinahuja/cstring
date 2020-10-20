@@ -175,35 +175,51 @@ string * cstring(char * init_str) {
 
 // End String Initializer--------------------------------------------------------------------------------------------------------------------------------------------------
 
+/*
+ * cap - returns capacity of indicated string
+ */
+
+inline int cap(string * s) {
+  // Verify Arguments
+  _verify(s, "[cap] the structure is null");
+
+  // Return String Capacity
+  return (s->cap);
+}
+
+/*
+ * len - returns length of indicated string
+ */
+
 inline int len(string * s) {
-  // Assert Pointer Validity
-  _verify(s, "[len] the structure is NULL");
+  // Verify Arguments
+  _verify(s, "[len] the structure is null");
 
   // Return String Length
   return (s->len);
 }
 
-inline int cap(string * s) {
-  // Assert Pointer Validity
-  _verify(s, "[cap] the structure is NULL");
-
-  // Return String Length
-  return (s->cap);
-}
+/*
+ * str - returns contents of indicated string
+ */
 
 inline char * str(string * s) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[str] one or more components of the structure are NULL");
+  // Verify Arguments
+  _verify((s) && (s->str), "[str] arguments to the function or components of the string structure are null");
 
-  // Return String Length
+  // Return String Pointer
   return (s->str);
 }
 
 // End Field Access Functions----------------------------------------------------------------------------------------------------------------------------------------------
 
+/*
+ * clear - resets contents of indicated string
+ */
+
 inline void clear(string * s) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[clear] one or more components of the structure are NULL");
+  // Verify Arguments
+  _verify((s) && (s->str), "[clear] arguments to the function or components of the string structure are null");
 
   // Reset Contents Of String
   memset(s->str, 0, s->cap);
@@ -211,6 +227,10 @@ inline void clear(string * s) {
   // Reset String Length
   s->len = 0;
 }
+
+/*
+ * delete - frees memory of indicated string
+ */
 
 inline void delete(string * s) {
   // Remove Structure From Table
