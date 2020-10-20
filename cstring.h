@@ -289,7 +289,7 @@ string * substrn(string * s, int i, int j) {
 
 bool insert(string * s, char * c, int ins) {
   // Assert Pointer Validity
-  _verify((s) && (s->str), "[insert] one or more components of the structure and or arguments to the function are NULL");
+  _verify((s) && (s->str) && (c), "[insert] one or more components of the structure and or arguments to the function are NULL");
 
   // Assert Range
   if ((ins < 0) || (ins > s->len)) {

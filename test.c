@@ -2,6 +2,7 @@
 #include "cstring.h"
 
 int main() {
-  string * cstr = cstring("Hello, World!");
-  printf("%s", str(cstr));
+ string *test = cstring("hello");
+ insert(test, NULL, 0);
+ printf("%s\n", test->str);
 }
