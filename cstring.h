@@ -385,24 +385,29 @@ inline int find(string * s, char * c) {
   }
 }
 
-inline char get(string * s, int i) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[get] one or more components of the structure and or arguments to the function are NULL");
+/*
+ * get - gets the ith character in string
+ */
 
-  // Range Check Index
-  if ((i < 0) || (i >= s->len)) {
+uint8 get(string * s, uint32 i) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[get] arguments to the function or components of the string structure are null");
+
+  // Verify Index Range
+  if (i >= (s->len)) {
+    // Return Error
     return (CSTRING_ERR);
+  } else {
+    // Return ith Character In String
+    return (s->str[i]);
   }
-
-  // Return ith Character In String
-  return (s->str[i]);
 }
 
 /*
- * get - removes the ith character in string
+ * rem - removes the ith character in string
  */
 
-char rem(string * s, uint32 i) {
+uint8 rem(string * s, uint32 i) {
   // Verify Arguments
   _verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
 
@@ -431,7 +436,7 @@ char rem(string * s, uint32 i) {
  * set - sets the ith character in string
  */
 
-bool set(string * s, uint32 i, uint8 c) {
+unit8 set(string * s, uint32 i, uint8 c) {
   // Verify Arguments
   _verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
 
