@@ -87,7 +87,7 @@ void _add_struct(string * s) {
       }
     }
   } else {
-    // Update Memory Requirements
+    // Update Allocation Limit
     max_allocs *= 2;
 
     // Create Resized Allocation Table
