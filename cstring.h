@@ -505,6 +505,10 @@ unit8 set(string * s, uint32 i, uint8 c) {
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
+/*
+ * _cstring_init - initializes cstring
+ */
+
 static void _cstring_init(void) {
   // Initialize Mutex Lock
   pthread_mutex_init(&mutex, NULL);
