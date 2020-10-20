@@ -13,30 +13,39 @@
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
+// Numerical Types
+typedef unsigned int uint32;
+typedef unsigned char uint8;
+
+// String Struct Type
 typedef struct string {
   char * str;
-  int cap;
-  int len;
-  int ind;
+  uint32 cap;
+  uint32 len;
+  uint32 ind;
 } string;
 
-// End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
+// End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 static pthread_mutex_t mutex;
 
-// End Synchronization Mutex-----------------------------------------------------------------------------------------------------------------------------------------------
+// End Synchronization Resources-------------------------------------------------------------------------------------------------------------------------------------------
 
 static void _cstring_init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
-void _verify(bool cmp, char * msg) {
-  if (!cmp) {
-    // Flush Output Streams
+/*
+ * verify - displays an error message if comparision fails
+ */
+
+void _verify(bool cmp, char * err_msg) {
+  if (!(cmp)) {
+    // Flush All Output Streams
     fflush(NULL);
 
     // Display Error Message
-    printf("\ncstring: %s\n", msg);
+    printf("\ncstring: %s\n", err_msg);
 
     // Exit Program
     exit(1);
@@ -45,25 +54,23 @@ void _verify(bool cmp, char * msg) {
 
 // End Verify Function-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-int max_allocs, num_allocs;
+// String Allocation Table
+uint32 max_allocs, num_allocs;
 string ** allocs = NULL;
 
+/*
+ * _add_struct - adds a string structure to allocation table
+ */
+
 void _add_struct(string * s) {
-  // Assert Pointer Validity
-  _verify(s, "[_add_struct] failed to add string to table");
+  // Verify Arguments
+  _verify(s, "[_add_struct] failed to add string allocation to table");
 
-  // Initialize Allocs Table
-  if (!allocs) {
-    max_allocs = CSTRING_ALC, num_allocs = 0;
-    allocs = (string **) calloc(sizeof(string *), CSTRING_ALC);
-    _verify(allocs, "[_add_struct] failed initialize structure table");
-  }
-
-  // Determine Available Space
+  // Check Available Memory
   if ((num_allocs + 1) < max_allocs) {
-    // Iterate Over Allocs Table
-    for (int i = 0; i < max_allocs; ++i) {
-      if (!allocs[i]) {
+    // Iterate Over Allocation Table
+    for (uint32 i = 0; i < max_allocs; ++i) {
+      if (!(allocs[i])) {
         // Update Num Allocs
         if (i > num_allocs) {
           num_allocs = i;
@@ -72,7 +79,7 @@ void _add_struct(string * s) {
         // Set Internal Structure Index
         s->ind = i;
 
-        // Add Structure To Allocs
+        // Add Structure To Allocation Table
         allocs[i] = s;
 
         // End Insertion Operation
@@ -80,19 +87,21 @@ void _add_struct(string * s) {
       }
     }
   } else {
-    // Update Space Requirements
+    // Update Memory Requirements
     max_allocs *= 2;
 
-    // Create Resized Allocs Array
+    // Create Resized Allocation Table
     string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs);
-    _verify(new_allocs, "[_add_struct] failed to resize structure table");
 
-    // Copy Alloc Data To Resized Array
-    for (int i = 0; i < (max_allocs / 2); ++i) {
+    // Verify Allocation Table
+    _verify(new_allocs, "[_add_struct] failed to resize allocation table");
+
+    // Copy Old Memory Contents To New Memory
+    for (uint32 i = 0; i < (max_allocs / 2); ++i) {
       new_allocs[i] = allocs[i];
     }
 
-    // Free Alloc Data
+    // Free Old Allocation Data
     free(allocs);
     allocs = new_allocs;
 
@@ -101,19 +110,23 @@ void _add_struct(string * s) {
   }
 }
 
-void _remove_struct(string * s) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[_remove_struct] one or more components of the structure are NULL");
+/*
+ * _remove_struct - removes a string structure to allocation table
+ */
 
-  // Find String Structure Via Index
-  if ((s->ind < max_allocs) && (allocs[s->ind]) && (allocs[s->ind] == s)) {
+void _remove_struct(string * s) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[_remove_struct] arguments to the function or components of the string structure are null");
+
+  // Remove String Structure By Index
+  if ((s->ind < max_allocs) && (allocs[s->ind] == s)) {
     allocs[s->ind] = NULL;
     return;
   }
 
-  // Find String Structure Via Pointer
-  for (int i = 0; i < max_allocs; ++i) {
-    // Remove Structure From Table On Match
+  // Remove String Structure Via Pointer
+  for (uint32 i = 0; i < max_allocs; ++i) {
+    // Remove Strucutre From Table
     if (allocs[i] == s) {
       allocs[i] = NULL;
       break;
@@ -123,35 +136,52 @@ void _remove_struct(string * s) {
 
 // End Structure Table-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-string * cstring(char * init_str) {
+/*
+ * cstring - returns a new string
+ */
+
+string * cstring(char * istr) {
   // Lock Mutex
   pthread_mutex_lock(&mutex);
 
   // Calculate Memory Requirements
-  size_t init_size = CSTRING_ALC;
-  int req_len = 0;
+  uint32 init_mem = CSTRING_ALC;
+  uint32 init_len = 0;
 
-  // Extend Memory For Init String
-  if (init_str) {
-    req_len = strlen(init_str);
-    init_size += req_len;
+  // Update Memory Requirements
+  if (istr) {
+    init_len = strlen(istr);
+    init_mem += init_len;
   }
 
-  // Initialize Structure
+  // Initialize String Structure
   string * s = (string *) calloc(sizeof(string), 1);
 
   // Set Structure Members
-  s->str = (char *) calloc(sizeof(char), init_size);
-  s->cap = init_size;
-  s->len = req_len;
+  s->str = (char *) calloc(sizeof(char), init_mem);
+  s->cap = init_mem;
+  s->len = init_len;
 
-  // Copy String To Structure
-  if (init_str) {
-    strcpy(s->str, init_str);
+  // Verify String Memory
+  if (!(s) || !(s->str)) {
+    if (!(s)) {
+      free(s);
+      s = NULL;
+    }
+
+    if (!(s->str)) {
+      free(s->str);
+      s->str = NULL;
+    }
+
+    // Verify Arguments
+    _verify((s) && (s->str), "[cstring] failed to initialize new structure");
   }
 
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[cstring] one or more components of the structure are NULL");
+  // Copy String To Structure
+  if (istr) {
+    strncpy(s->str, istr, init_len);
+  }
 
   // Add Structure To Table
   _add_struct(s);
@@ -159,41 +189,57 @@ string * cstring(char * init_str) {
   // Unlock Mutex
   pthread_mutex_unlock(&mutex);
 
-  // Return Structure Pointer
+  // Return  StringStructure Pointer
   return (s);
 }
 
 // End String Initializer--------------------------------------------------------------------------------------------------------------------------------------------------
 
+/*
+ * cap - returns capacity of indicated string
+ */
+
+inline int cap(string * s) {
+  // Verify Arguments
+  _verify(s, "[cap] the structure is null");
+
+  // Return String Capacity
+  return (s->cap);
+}
+
+/*
+ * len - returns length of indicated string
+ */
+
 inline int len(string * s) {
-  // Assert Pointer Validity
-  _verify(s, "[len] the structure is NULL");
+  // Verify Arguments
+  _verify(s, "[len] the structure is null");
 
   // Return String Length
   return (s->len);
 }
 
-inline int cap(string * s) {
-  // Assert Pointer Validity
-  _verify(s, "[cap] the structure is NULL");
-
-  // Return String Length
-  return (s->cap);
-}
+/*
+ * str - returns contents of indicated string
+ */
 
 inline char * str(string * s) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[str] one or more components of the structure are NULL");
+  // Verify Arguments
+  _verify((s) && (s->str), "[str] arguments to the function or components of the string structure are null");
 
-  // Return String Length
+  // Return String Pointer
   return (s->str);
 }
 
 // End Field Access Functions----------------------------------------------------------------------------------------------------------------------------------------------
 
-inline void clear(string * s) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[clear] one or more components of the structure are NULL");
+/*
+ * clear - resets contents of indicated string
+ */
+
+void clear(string * s) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[clear] arguments to the function or components of the string structure are null");
 
   // Reset Contents Of String
   memset(s->str, 0, s->cap);
@@ -202,7 +248,14 @@ inline void clear(string * s) {
   s->len = 0;
 }
 
-inline void delete(string * s) {
+/*
+ * delete - frees memory of indicated string
+ */
+
+void delete(string * s) {
+  // Verify Arguments
+  _verify(s, "[delete] the structure is null");
+
   // Remove Structure From Table
   _remove_struct(s);
 
@@ -215,10 +268,15 @@ inline void delete(string * s) {
   s = NULL;
 }
 
+/*
+ * delete_all - frees memory of all strings
+ */
+
 void delete_all(void) {
+  // Verify Allocation Table
   if (allocs) {
-    // Free Allocs
-    for (int i = 0; i < max_allocs; ++i) {
+    // Free String Allocations
+    for (uint32 i = 0; i < max_allocs; ++i) {
       if (allocs[i]) {
         // Free String Memory
         free(allocs[i]->str);
@@ -230,7 +288,7 @@ void delete_all(void) {
       }
     }
 
-    // Free Table Memory
+    // Free Allocation Table Memory
     free(allocs);
     allocs = NULL;
   }
@@ -238,98 +296,117 @@ void delete_all(void) {
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
 
-string * copy(string * s) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[copy] one or more components of the structure are NULL");
+/*
+ * copy - returns a copy of indicated string
+ */
 
-  // Return Duplicate String
+string * copy(string * s) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[copy] arguments to the function or components of the string structure are null");
+
+  // Return Copy Of String
   return (cstring(s->str));
 }
 
-string * substr(string * s, int i) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[substr] one or more components of the structure are NULL");
+/*
+ * substr - returns a copy of indicated string from [i, len(s)]
+ */
 
-  // Range Check Index
-  if ((i < 0) || (i >= s->len)) {
-    return (NULL);
-  }
+string * substr(string * s, uint32 i) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[substr] arguments to the function or components of the string structure are null");
 
-  // Return Duplicate String From [i, len)
-  return (cstring(s->str + i));
+  // Return Substring From [i, len(s)]
+  return ((i >= s->len) ? (NULL) : (cstring(s->str + i)));
 }
 
-string * substrn(string * s, int i, int j) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[substrn] one or more components of the structure are NULL");
+/*
+ * substrn - returns a copy of indicated string from [i, j)
+ */
+
+string * substrn(string * s, uint32 i, uint32 j) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[substrn] arguments to the function or components of the string structure are null");
 
   // Range Check Indices
-  if ((i >= 0) && (j <= s->len) && (i < j)) {
-    // Duplicate String
-    char * sdup = s->str + i;
-    char rem_c = sdup[j - i];
+  if ((i < j) && (j <= s->len)) {
+    // Get Substring From ith Index
+    char * dup = (s->str + i);
+
+    // Store Removed Character
+    char rc = dup[j - i];
 
     // Set Null Terminator
-    sdup[j - i] = 0;
+    dup[j - i] = 0;
 
     // Create Substring
-    string * sub = (cstring(sdup));
+    string * sub = (cstring(dup));
 
     // Unset Null Terminator
-    sdup[j - i] = rem_c;
+    dup[j - i] = rc;
 
     // Return Duplicate String From [i, j)
     return (sub);
   }
 
+  // Return NULL Pointer
   return (NULL);
 }
 
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
 
-bool insert(string * s, char * c, int ins) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str) && (c), "[insert] one or more components of the structure and or arguments to the function are NULL");
+/*
+ * insert - inserts a substring at kth index
+ */
 
-  // Assert Range
-  if ((ins < 0) || (ins > s->len)) {
+bool insert(string * s, char * c, uint32 k) {
+  // Verify Arguments
+  _verify((s) && (s->str) && (c), "[insert] arguments to the function or components of the string structure are null");
+
+  // Verify Index Range
+  if (k > (s->len)) {
     return (CSTRING_ERR);
   }
 
-  // Calculate Length Of Request
-  int req_len = strlen(c);
+  // Calculate Insertion String Length
+  uint32 req_len = strlen(c);
 
   // Calculate Memory Requirements
-  int str_mem = s->cap;
-  int req_mem = s->len + req_len;
+  uint32 str_mem = (s->cap);
+  uint32 req_mem = (s->len + req_len);
 
-  // Sufficient Memory
+  // Compare Memory Values
   if (str_mem >= req_mem) {
-    // Shift Required
-    if (ins < s->len) {
-      // Right Shift String
-      for (int i = 0; i < req_len; ++i) {
-        for (int j = s->len; j > ins; j--) {
+    // Sufficient Memory
+    if (k < s->len) {
+      // Perform Shifts
+      for (uint32 i = 0; i < req_len; --i) {
+        // Right Shift String
+        for (uint32 j = s->len; j > k; --j) {
           s->str[j + i] = s->str[j + i - 1];
         }
       }
     }
 
-    // Copy Request String To Structure
-    for (int i = 0; i < req_len; ++i) {
-      s->str[ins + i] = c[i];
+    // Copy Insertion String To Structure
+    for (uint32 i = 0; i < req_len; ++i) {
+      s->str[k + i] = c[i];
     }
 
-    // Adjust Structure Length
+    // Update String Length
     s->len += req_len;
   } else {
-    // Extend Memory
-    int new_cap = req_mem + CSTRING_ALC;
-    char * new_str = (char *) calloc(sizeof(char), new_cap);
+    // Insufficent Memory
+    uint32 new_mem = (req_mem + CSTRING_ALC);
+
+    // Allocate New String Memory Space
+    char * new_str = (char *) calloc(sizeof(char), new_mem);
+
+    // Verify New String Memory Space
     _verify(new_str, "[insert] failed to resize string memory space");
 
     // Copy Old Memory Contents To New Memory
-    for (int i = 0; i < s->len; ++i) {
+    for (int i = 0; i < s->len; i++) {
       new_str[i] = s->str[i];
     }
 
@@ -337,25 +414,37 @@ bool insert(string * s, char * c, int ins) {
     free(s->str);
     s->str = NULL;
 
-    // Update Structure Members
+    // Update String Members
     s->str = new_str;
-    s->cap = new_cap;
+    s->cap = new_mem;
 
-    // Retry Append Operation
-    insert(s, c, ins);
+    // Retry Insertion Operation
+    insert(s, c, k);
   }
 
   // Return Success
   return (CSTRING_SUC);
 }
 
+/*
+ * append - appends a character string to string structure
+ */
+
 inline bool append(string * s, char * c) {
   return (insert(s, c, s->len));
 }
 
+/*
+ * prepend - prepends a character string to string structure
+ */
+
 inline bool prepend(string * s, char * c) {
   return (insert(s, c, 0));
 }
+
+/*
+ * concat - concatenates two string structres into a new string struture
+ */
 
 inline bool concat(string * s1, string * s2) {
   return (append(s1, s2->str));
@@ -363,76 +452,104 @@ inline bool concat(string * s1, string * s2) {
 
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
 
-inline int find(string * s, char * c) {
-  // Get Character Position
+/*
+ * find - determines the position of substring
+ */
+
+uint32 find(string * s, char * c) {
+  // Verify Arguments
+  _verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
+
+  // Get Substring Position
   char * pos = strstr(s->str, c);
 
-  // Determine Position Validity
-  if (pos) {
-    return (int) (pos - (s->str));
+  // Return Substring Position
+  return ((pos) ? (pos - (s->str)) : (CSTRING_EOL));
+}
+
+/*
+ * get - gets the ith character in string
+ */
+
+uint8 get(string * s, uint32 i) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[get] arguments to the function or components of the string structure are null");
+
+  // Return Character
+  return ((i >= (s->len)) ? (CSTRING_ERR) : (s->str[i]));
+}
+
+/*
+ * rem - removes the ith character in string
+ */
+
+uint8 rem(string * s, uint32 i) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
+
+  // Verify Index Range
+  if (i >= (s->len)) {
+    // Return Error
+    return (CSTRING_ERR);
   } else {
-    return (CSTRING_EOL);
+    // Store Removed Character
+    uint8 rc = s->str[i];
+
+    // Left Shift String
+    for (uint32 j = i; j < (s->len); ++j) {
+      s->str[j] = s->str[j + 1];
+    }
+
+    // Update String Length
+    s->len -= 1;
+
+    // Return Removed Character
+    return (rc);
   }
 }
 
-inline char get(string * s, int i) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[get] one or more components of the structure and or arguments to the function are NULL");
+/*
+ * set - sets the ith character in string
+ */
 
-  // Range Check Index
-  if ((i < 0) || (i >= s->len)) {
+uint8 set(string * s, uint32 i, uint8 c) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
+
+  // Verify Index Range
+  if (i >= (s->len)) {
+    // Return Error
     return (CSTRING_ERR);
+  } else {
+    // Store Overwritten Character
+    uint8 oc = s->str[i];
+
+    // Set ith Character In String
+    s->str[i] = c;
+
+    // Return Overwritten Character
+    return (oc);
   }
-
-  // Return ith Character In String
-  return (s->str[i]);
-}
-
-inline char rem(string * s, int i) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[rem] one or more components of the structure and or arguments to the function are NULL");
-
-  // Range Check Index
-  if ((i < 0) || (i >= s->len)) {
-    return (CSTRING_ERR);
-  }
-
-  // Store Removed Character For Return
-  char rem_c = s->str[i];
-
-  // Left Shift String
-  for (int j = i; j < s->len; j++) {
-    s->str[j] = s->str[j + 1];
-  }
-
-  // Update String Length
-  s->len -= 1;
-
-  // Return Removed Character
-  return (rem_c);
-}
-
-inline bool set(string * s, int i, char c) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[set] one or more components of the structure and or arguments to the function are NULL");
-
-  // Assert Range
-  if ((i < 0) || (i >= s->len)) {
-    return (CSTRING_ERR);
-  }
-
-  // Set ith Character In String
-  s->str[i] = c;
-
-  // Return Success
-  return (CSTRING_SUC);
 }
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
+/*
+ * _cstring_init - initializes cstring program
+ */
+
 static void _cstring_init(void) {
   // Initialize Mutex Lock
   pthread_mutex_init(&mutex, NULL);
+
+  // Initialize Allocations Counters
+  max_allocs = CSTRING_ALC, num_allocs = 0;
+
+  // Initialize Allocation Table
+  allocs = (string **) calloc(sizeof(string *), max_allocs);
+
+  // Verify Allocation Table
+  _verify(allocs, "[_add_struct] failed initialize allocation table");
 
   // Set Exit Procedure
   atexit(delete_all);
