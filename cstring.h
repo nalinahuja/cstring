@@ -30,13 +30,17 @@ static void _cstring_init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
+/*
+ * verify - displays an error message if comparision fails
+ */
+
 void _verify(bool cmp, char * msg) {
   if (!cmp) {
-    // Flush Output Streams
+    // Flush All Output Streams
     fflush(NULL);
 
     // Display Error Message
-    printf("\ncstring: %s\n", msg);
+    kprintf("\ncstring: %s\n", msg);
 
     // Exit Program
     exit(1);
@@ -416,16 +420,17 @@ inline bool set(string * s, int i, char c) {
   // Assert Pointer Validity
   _verify((s) && (s->str), "[set] one or more components of the structure and or arguments to the function are NULL");
 
-  // Assert Range
+  // Check Index Range
   if ((i < 0) || (i >= s->len)) {
+    // Return Error
     return (CSTRING_ERR);
+  } else {
+    // Set ith Character In String
+    s->str[i] = c;
+
+    // Return Success
+    return (CSTRING_SUC);
   }
-
-  // Set ith Character In String
-  s->str[i] = c;
-
-  // Return Success
-  return (CSTRING_SUC);
 }
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
@@ -433,6 +438,8 @@ inline bool set(string * s, int i, char c) {
 static void _cstring_init(void) {
   // Initialize Mutex Lock
   pthread_mutex_init(&mutex, NULL);
+
+  // TODO, setup memory table here
 
   // Set Exit Procedure
   atexit(delete_all);
