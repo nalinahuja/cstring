@@ -359,13 +359,25 @@ bool insert(string * s, char * c, int ins) {
   return (CSTRING_SUC);
 }
 
+/*
+ * append - appends a character string to string structure
+ */
+
 inline bool append(string * s, char * c) {
   return (insert(s, c, s->len));
 }
 
+/*
+ * prepend - prepends a character string to string structure
+ */
+
 inline bool prepend(string * s, char * c) {
   return (insert(s, c, 0));
 }
+
+/*
+ * concat - concatenates two string structres into a new string struture
+ */
 
 inline bool concat(string * s1, string * s2) {
   return (append(s1, s2->str));
