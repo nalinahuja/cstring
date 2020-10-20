@@ -54,18 +54,23 @@ void _verify(bool cmp, char * err_msg) {
 
 // End Verify Function-----------------------------------------------------------------------------------------------------------------------------------------------------
 
+// String Allocation Table
 uint32 max_allocs, num_allocs;
 string ** allocs = NULL;
 
+/*
+ * _add_struct - adds a string structure to allocation table
+ */
+
 void _add_struct(string * s) {
   // Verify Arguments
-  _verify(s, "[_add_struct] failed to add string to table");
+  _verify(s, "[_add_struct] failed to add string allocation to table");
 
-  // Determine Available Space
+  // Check Available Memory
   if ((num_allocs + 1) < max_allocs) {
-    // Iterate Over Allocs Table
-    for (int i = 0; i < max_allocs; ++i) {
-      if (!allocs[i]) {
+    // Iterate Over Allocation Table
+    for (uint32 i = 0; i < max_allocs; ++i) {
+      if (!(allocs[i])) {
         // Update Num Allocs
         if (i > num_allocs) {
           num_allocs = i;
@@ -74,7 +79,7 @@ void _add_struct(string * s) {
         // Set Internal Structure Index
         s->ind = i;
 
-        // Add Structure To Allocs
+        // Add Structure To Allocation Table
         allocs[i] = s;
 
         // End Insertion Operation
@@ -82,19 +87,21 @@ void _add_struct(string * s) {
       }
     }
   } else {
-    // Update Space Requirements
+    // Update Memory Requirements
     max_allocs *= 2;
 
-    // Create Resized Allocs Array
+    // Create Resized Allocation Table
     string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs);
-    _verify(new_allocs, "[_add_struct] failed to resize structure table");
 
-    // Copy Alloc Data To Resized Array
-    for (int i = 0; i < (max_allocs / 2); ++i) {
+    // Verify Allocation Table
+    _verify(new_allocs, "[_add_struct] failed to resize allocation table");
+
+    // Copy Old Memory Contents To New Memory
+    for (uint32 i = 0; i < (max_allocs / 2); ++i) {
       new_allocs[i] = allocs[i];
     }
 
-    // Free Alloc Data
+    // Free Old Allocation Data
     free(allocs);
     allocs = new_allocs;
 
@@ -102,6 +109,10 @@ void _add_struct(string * s) {
     _add_struct(s);
   }
 }
+
+/*
+ * _remove_struct - removes a string structure to allocation table
+ */
 
 void _remove_struct(string * s) {
   // Verify Arguments
