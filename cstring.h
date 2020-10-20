@@ -1,6 +1,5 @@
 // Developed by Nalin Ahuja, nalinahuja22
 
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
