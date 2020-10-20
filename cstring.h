@@ -237,7 +237,7 @@ inline char * str(string * s) {
  * clear - resets contents of indicated string
  */
 
-inline void clear(string * s) {
+void clear(string * s) {
   // Verify Arguments
   _verify((s) && (s->str), "[clear] arguments to the function or components of the string structure are null");
 
@@ -252,7 +252,10 @@ inline void clear(string * s) {
  * delete - frees memory of indicated string
  */
 
-inline void delete(string * s) {
+void delete(string * s) {
+  // Verify Arguments
+  _verify(s, "[delete] the structure is null");
+
   // Remove Structure From Table
   _remove_struct(s);
 
@@ -270,9 +273,10 @@ inline void delete(string * s) {
  */
 
 void delete_all(void) {
+  // Verify Allocation Table
   if (allocs) {
-    // Free Allocs
-    for (int i = 0; i < max_allocs; ++i) {
+    // Free String Allocations
+    for (uint32 i = 0; i < max_allocs; ++i) {
       if (allocs[i]) {
         // Free String Memory
         free(allocs[i]->str);
@@ -284,7 +288,7 @@ void delete_all(void) {
       }
     }
 
-    // Free Table Memory
+    // Free Allocation Table Memory
     free(allocs);
     allocs = NULL;
   }
