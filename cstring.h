@@ -40,7 +40,7 @@ static void cstring_init(void) __attribute__ ((constructor));
  */
 
 void _verify(bool cmp, char * err_msg) {
-  if (!cmp) {
+  if (!(cmp)) {
     // Flush All Output Streams
     fflush(NULL);
 
