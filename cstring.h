@@ -31,7 +31,7 @@ static pthread_mutex_t mutex;
 
 // End Synchronization Resources-------------------------------------------------------------------------------------------------------------------------------------------
 
-static void _cstring_init(void) __attribute__ ((constructor));
+static void _init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,12 +59,12 @@ uint32 max_allocs, num_allocs;
 string ** allocs = NULL;
 
 /*
- * _add_struct - adds a string structure to allocation table
+ * add_alloc - adds a string structure to allocation table
  */
 
-void _add_struct(string * s) {
+void add_alloc(string * s) {
   // Verify Arguments
-  _verify(s, "[_add_struct] failed to add string allocation to table");
+  _verify(s, "[add_alloc] failed to add string allocation to table");
 
   // Check Available Memory
   if ((num_allocs + 1) < max_allocs) {
@@ -94,7 +94,7 @@ void _add_struct(string * s) {
     string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs);
 
     // Verify Allocation Table
-    _verify(new_allocs, "[_add_struct] failed to resize allocation table");
+    _verify(new_allocs, "[add_alloc] failed to resize allocation table");
 
     // Copy Old Memory Contents To New Memory
     for (uint32 i = 0; i < (max_allocs / 2); ++i) {
@@ -106,17 +106,17 @@ void _add_struct(string * s) {
     allocs = new_allocs;
 
     // Retry Add Operation
-    _add_struct(s);
+    add_alloc(s);
   }
 }
 
 /*
- * _remove_struct - removes a string structure to allocation table
+ * remove_alloc - removes a string structure to allocation table
  */
 
-void _remove_struct(string * s) {
+void remove_alloc(string * s) {
   // Verify Arguments
-  _verify((s) && (s->str), "[_remove_struct] arguments to the function or components of the string structure are null");
+  _verify((s) && (s->str), "[remove_alloc] arguments to the function or components of the string structure are null");
 
   // Remove String Structure By Index
   if ((s->ind < max_allocs) && (allocs[s->ind] == s)) {
@@ -184,7 +184,7 @@ string * cstring(char * istr) {
   }
 
   // Add Structure To Table
-  _add_struct(s);
+  add_alloc(s);
 
   // Unlock Mutex
   pthread_mutex_unlock(&mutex);
@@ -257,7 +257,7 @@ void delete(string * s) {
   _verify(s, "[delete] the structure is null");
 
   // Remove Structure From Table
-  _remove_struct(s);
+  remove_alloc(s);
 
   // Free String Memory
   free(s->str);
@@ -538,7 +538,7 @@ uint8 set(string * s, uint32 i, uint8 c) {
  * _cstring_init - initializes cstring program
  */
 
-static void _cstring_init(void) {
+static void _init(void) {
   // Initialize Mutex Lock
   pthread_mutex_init(&mutex, NULL);
 
@@ -549,7 +549,7 @@ static void _cstring_init(void) {
   allocs = (string **) calloc(sizeof(string *), max_allocs);
 
   // Verify Allocation Table
-  _verify(allocs, "[_add_struct] failed initialize allocation table");
+  _verify(allocs, "[init] failed initialize allocation table");
 
   // Set Exit Procedure
   atexit(delete_all);
