@@ -40,7 +40,7 @@ static void _cstring_init(void) __attribute__ ((constructor));
  * verify - displays an error message if comparision fails
  */
 
-static void _verify(bool cmp, char * err_msg) {
+void _verify(bool cmp, char * err_msg) {
   if (!cmp) {
     // Flush All Output Streams
     fflush(NULL);
