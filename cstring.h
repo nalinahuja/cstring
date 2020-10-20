@@ -40,7 +40,7 @@ static void _cstring_init(void) __attribute__ ((constructor));
  * verify - displays an error message if comparision fails
  */
 
-void _verify(bool cmp, char * err_msg) {
+static void _verify(bool cmp, char * err_msg) {
   if (!cmp) {
     // Flush All Output Streams
     fflush(NULL);
@@ -398,7 +398,11 @@ inline char get(string * s, int i) {
   return (s->str[i]);
 }
 
-inline char rem(string * s, unsigned int i) {
+/*
+ * get - removes the ith character in string
+ */
+
+inline char rem(string * s, uint32 i) {
   // Verify Arguments
   _verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
 
@@ -408,10 +412,10 @@ inline char rem(string * s, unsigned int i) {
     return (CSTRING_ERR);
   } else {
     // Store Removed Character
-    unsigned char rem_c = s->str[i];
+    uint8 rc = s->str[i];
 
     // Left Shift String
-    for (int j = i; j < (s->len); j++) {
+    for (uint32 j = i; j < (s->len); j++) {
       s->str[j] = s->str[j + 1];
     }
 
@@ -419,7 +423,7 @@ inline char rem(string * s, unsigned int i) {
     s->len -= 1;
 
     // Return Removed Character
-    return (rem_c);
+    return (rc);
   }
 }
 
@@ -427,7 +431,7 @@ inline char rem(string * s, unsigned int i) {
  * set - sets the ith character in string
  */
 
-inline bool set(string * s, unsigned int i, unsigned char c) {
+inline bool set(string * s, uint32 i, uint8 c) {
   // Verify Arguments
   _verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
 
