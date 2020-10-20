@@ -373,16 +373,19 @@ inline bool concat(string * s1, string * s2) {
 
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
 
-inline int find(string * s, char * c) {
-  // Get Character Position
+/*
+ * find - determines the position of substring
+ */
+
+uint32 find(string * s, char * c) {
+  // Verify Arguments
+  _verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
+
+  // Get Substring Position
   char * pos = strstr(s->str, c);
 
-  // Determine Position Validity
-  if (pos) {
-    return (int) (pos - (s->str));
-  } else {
-    return (CSTRING_EOL);
-  }
+  // Return Substring Position
+  return ((pos) ? (pos - (s->str) : (CSTRING_EOL));
 }
 
 /*
@@ -393,14 +396,8 @@ uint8 get(string * s, uint32 i) {
   // Verify Arguments
   _verify((s) && (s->str), "[get] arguments to the function or components of the string structure are null");
 
-  // Verify Index Range
-  if (i >= (s->len)) {
-    // Return Error
-    return (CSTRING_ERR);
-  } else {
-    // Return ith Character In String
-    return (s->str[i]);
-  }
+  // Return Character
+  return ((i >= (s->len)) ? (CSTRING_ERR) : (s->str[i]));
 }
 
 /*
