@@ -154,13 +154,26 @@ string * cstring(char * istr) {
   s->cap = init_mem;
   s->len = init_len;
 
-  // Copy String To Structure
-  if (init_str) {
-    strncpy(s->str, istr, init_len);
+  // Verify String Memory
+  if (!(s) || !(s->str)) {
+    if (!(s)) {
+      free(s);
+      s = NULL;
+    }
+
+    if (!(s->str)) {
+      free(s->str);
+      s->str = NULL;
+    }
+
+    // Verify Arguments
+    _verify((s) && (s->str), "[cstring] failed to initialize new structure");
   }
 
-  // Verify Arguments
-  _verify((s) && (s->str), "[cstring] one or more components of the structure are NULL");
+  // Copy String To Structure
+  if (istr) {
+    strncpy(s->str, istr, init_len);
+  }
 
   // Add Structure To Table
   _add_struct(s);
