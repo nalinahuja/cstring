@@ -13,18 +13,24 @@
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
+// Numerical Types
+typedef int int32;
+typedef unsigned int uint32;
+typedef unsigned char uint8;
+
+// String Struct Type
 typedef struct string {
   char * str;
-  int cap;
-  int len;
-  int ind;
+  uint32 cap;
+  uint32 len;
+  uint32 ind;
 } string;
 
-// End String Structure----------------------------------------------------------------------------------------------------------------------------------------------------
+// End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 static pthread_mutex_t mutex;
 
-// End Synchronization Mutex-----------------------------------------------------------------------------------------------------------------------------------------------
+// End Synchronization Resources-------------------------------------------------------------------------------------------------------------------------------------------
 
 static void _cstring_init(void) __attribute__ ((constructor));
 
@@ -34,13 +40,13 @@ static void _cstring_init(void) __attribute__ ((constructor));
  * verify - displays an error message if comparision fails
  */
 
-void _verify(bool cmp, char * msg) {
+void _verify(bool cmp, char * err_msg) {
   if (!cmp) {
     // Flush All Output Streams
     fflush(NULL);
 
     // Display Error Message
-    kprintf("\ncstring: %s\n", msg);
+    kprintf("\ncstring: %s\n", err_msg);
 
     // Exit Program
     exit(1);
@@ -392,36 +398,41 @@ inline char get(string * s, int i) {
   return (s->str[i]);
 }
 
-inline char rem(string * s, int i) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[rem] one or more components of the structure and or arguments to the function are NULL");
+inline char rem(string * s, unsigned int i) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
 
-  // Range Check Index
-  if ((i < 0) || (i >= s->len)) {
+  // Verify Index Range
+  if (i >= (s->len)) {
+    // Return Error
     return (CSTRING_ERR);
+  } else {
+    // Store Removed Character
+    unsigned char rem_c = s->str[i];
+
+    // Left Shift String
+    for (int j = i; j < (s->len); j++) {
+      s->str[j] = s->str[j + 1];
+    }
+
+    // Update String Length
+    s->len -= 1;
+
+    // Return Removed Character
+    return (rem_c);
   }
-
-  // Store Removed Character For Return
-  char rem_c = s->str[i];
-
-  // Left Shift String
-  for (int j = i; j < s->len; j++) {
-    s->str[j] = s->str[j + 1];
-  }
-
-  // Update String Length
-  s->len -= 1;
-
-  // Return Removed Character
-  return (rem_c);
 }
 
-inline bool set(string * s, int i, char c) {
-  // Assert Pointer Validity
-  _verify((s) && (s->str), "[set] one or more components of the structure and or arguments to the function are NULL");
+/*
+ * set - sets the ith character in string
+ */
 
-  // Check Index Range
-  if ((i < 0) || (i >= s->len)) {
+inline bool set(string * s, unsigned int i, unsigned char c) {
+  // Verify Arguments
+  _verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
+
+  // Verify Index Range
+  if (i >= (s->len)) {
     // Return Error
     return (CSTRING_ERR);
   } else {
