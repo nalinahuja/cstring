@@ -312,50 +312,54 @@ uint32 find(string * s, char * c) {
 
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
 
-bool insert(string * s, char * c, uint32 ins) {
+bool insert(string * s, char * c, uint32 k) {
   // Assert Pointer Validity
   _verify((s) && (s->str) && (c), "[insert] arguments to the function or components of the string structure are null");
 
   // Verify Index Range
-  if (ins > (s->len)) {
+  if (k > (s->len)) {
     return (CSTRING_ERR);
   }
 
-  // Calculate Length Of Request
+  // Calculate Insertion String Length
   uint32 req_len = strlen(c);
 
   // Calculate Memory Requirements
   uint32 str_mem = (s->cap);
   uint32 req_mem = (s->len + req_len);
 
-  // Sufficient Memory Exists
+  // Compare Memory Values
   if (str_mem >= req_mem) {
-    // Shift Required
-    if (ins < s->len) {
-      // Perform Right Shifts
-      for (uint32 i = 0; i < req_len; i++) {
+    // Sufficient Memory
+    if (k < s->len) {
+      // Perform Shifts
+      for (uint32 i = 0; i < req_len; --i) {
         // Right Shift String
-        for (uint32 j = s->len; j > ins; j--) {
+        for (uint32 j = s->len; j > k; --j) {
           s->str[j + i] = s->str[j + i - 1];
         }
       }
     }
 
-    // Copy Request String To Structure
-    for (int i = 0; i < req_len; ++i) {
-      s->str[ins + i] = c[i];
+    // Copy Insertion String To Structure
+    for (uint32 i = 0; i < req_len; ++i) {
+      s->str[k + i] = c[i];
     }
 
     // Update String Length
     s->len += req_len;
   } else {
-    // Extend Memory
-    int new_cap = req_mem + CSTRING_ALC;
-    char * new_str = (char *) calloc(sizeof(char), new_cap);
+    // Insufficent Memory
+    uint32 new_mem = (req_mem + CSTRING_ALC);
+
+    // Allocate New String Memory Space
+    char * new_str = (char *) calloc(sizeof(char), new_mem);
+
+    // Verify New String Memory Space
     _verify(new_str, "[insert] failed to resize string memory space");
 
     // Copy Old Memory Contents To New Memory
-    for (int i = 0; i < s->len; ++i) {
+    for (int i = 0; i < s->len; i++) {
       new_str[i] = s->str[i];
     }
 
@@ -363,12 +367,12 @@ bool insert(string * s, char * c, uint32 ins) {
     free(s->str);
     s->str = NULL;
 
-    // Update Structure Members
+    // Update String Members
     s->str = new_str;
     s->cap = new_cap;
 
-    // Retry Append Operation
-    insert(s, c, ins);
+    // Retry Insertion Operation
+    insert(s, c, k);
   }
 
   // Return Success
@@ -430,7 +434,7 @@ uint8 rem(string * s, uint32 i) {
     uint8 rc = s->str[i];
 
     // Left Shift String
-    for (uint32 j = i; j < (s->len); j++) {
+    for (uint32 j = i; j < (s->len); ++j) {
       s->str[j] = s->str[j + 1];
     }
 
