@@ -132,34 +132,34 @@ void _remove_struct(string * s) {
 
 // End Structure Table-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-string * cstring(char * init_str) {
+string * cstring(char * istr) {
   // Lock Mutex
   pthread_mutex_lock(&mutex);
 
   // Calculate Memory Requirements
-  size_t init_size = CSTRING_ALC;
-  int req_len = 0;
+  uint32 init_mem = CSTRING_ALC;
+  uint32 init_len = 0;
 
-  // Extend Memory For Init String
-  if (init_str) {
-    req_len = strlen(init_str);
-    init_size += req_len;
+  // Update Memory Requirements
+  if (istr) {
+    init_len = strlen(istr);
+    init_mem += init_len;
   }
 
-  // Initialize Structure
+  // Initialize String Structure
   string * s = (string *) calloc(sizeof(string), 1);
 
   // Set Structure Members
-  s->str = (char *) calloc(sizeof(char), init_size);
-  s->cap = init_size;
-  s->len = req_len;
+  s->str = (char *) calloc(sizeof(char), init_mem);
+  s->cap = init_mem;
+  s->len = init_len;
 
   // Copy String To Structure
   if (init_str) {
-    strcpy(s->str, init_str);
+    strncpy(s->str, istr, init_len);
   }
 
-  // Assert Pointer Validity
+  // Verify Arguments
   _verify((s) && (s->str), "[cstring] one or more components of the structure are NULL");
 
   // Add Structure To Table
@@ -168,7 +168,7 @@ string * cstring(char * init_str) {
   // Unlock Mutex
   pthread_mutex_unlock(&mutex);
 
-  // Return Structure Pointer
+  // Return  StringStructure Pointer
   return (s);
 }
 
