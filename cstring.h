@@ -443,6 +443,10 @@ bool insert(string * s, char * c, uint32 k) {
  */
 
 inline bool append(string * s, char * c) {
+  // Verify Arguments
+  verify((s) && (s->str) && (c), "[append] arguments to the function or components of the string structure are null");
+
+  // Perform Append Operation
   return (insert(s, c, s->len));
 }
 
@@ -451,6 +455,10 @@ inline bool append(string * s, char * c) {
  */
 
 inline bool prepend(string * s, char * c) {
+  // Verify Arguments
+  verify((s) && (s->str) && (c), "[prepend] arguments to the function or components of the string structure are null");
+
+  // Perform Prepend Operation
   return (insert(s, c, 0));
 }
 
@@ -459,6 +467,9 @@ inline bool prepend(string * s, char * c) {
  */
 
 inline bool concat(string * s1, string * s2) {
+  // Verify Arguments
+  verify((s1) && (s2) && (s1->str) && (s2->str), "[concat] arguments to the function or components of the string structure are null");
+
   return (append(s1, s2->str));
 }
 
