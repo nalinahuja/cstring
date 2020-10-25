@@ -572,7 +572,7 @@ static void cstring_init(void) {
   allocs = (string **) calloc(sizeof(string *), max_allocs);
 
   // Verify Allocation Table
-  verify(allocs, "[init] failed initialize allocation table");
+  verify(allocs, "[init] failed to initialize allocation table");
 
   // Set Exit Procedure
   atexit(delete_all);
