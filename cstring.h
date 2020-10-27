@@ -392,7 +392,7 @@ bool insert(string * s, char * c, uint32 k) {
     // Sufficient Memory
     if (k < s->len) {
       // Perform Shifts
-      for (uint32 i = 0; i < req_len; --i) {
+      for (uint32 i = 0; i < req_len; ++i) {
         // Right Shift String
         for (uint32 j = s->len; j > k; --j) {
           s->str[j + i] = s->str[j + i - 1];
