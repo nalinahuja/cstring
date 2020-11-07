@@ -103,6 +103,8 @@ void add_alloc(string * s) {
 
     // Free Old Allocation Data
     free(allocs);
+
+    // Update Allocation Table
     allocs = new_allocs;
 
     // Retry Add Operation
@@ -565,7 +567,7 @@ static void cstring_init(void) {
   // Initialize Mutex Lock
   pthread_mutex_init(&mutex, NULL);
 
-  // Initialize Allocations Counters
+  // Initialize Allocation Counters
   max_allocs = CSTRING_ALC, num_allocs = 0;
 
   // Initialize Allocation Table
