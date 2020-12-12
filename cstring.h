@@ -5,9 +5,13 @@
 #include <stdbool.h>
 #include <pthread.h>
 
+// Return Constants
 #define CSTRING_SUC (1)
 #define CSTRING_ERR (0)
 #define CSTRING_EOL (-1)
+
+// Allocation Constants
+#define CSTRING_EXT (2)
 #define CSTRING_ALC (15)
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
@@ -45,13 +49,13 @@ static void cstring_init(void) __attribute__ ((constructor));
  * verify - displays an error message if comparision fails
  */
 
-void verify(bool cmp, char * err_msg) {
+void verify(bool cmp, char * msg) {
   if (!(cmp)) {
     // Flush All Output Streams
     fflush(NULL);
 
     // Display Error Message
-    printf("\ncstring: %s\n", err_msg);
+    printf("\ncstring: %s\n", msg);
 
     // Exit Program
     exit(1);
@@ -89,22 +93,22 @@ void add_alloc(string * s) {
       }
     }
   } else {
-    // Update Allocation Limit
-    max_allocs *= 2;
-
     // Create Resized Allocation Table
-    string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs);
+    string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs * CSTRING_EXT);
 
     // Verify Allocation Table
     verify(new_allocs, "[add_alloc] failed to resize allocation table");
 
     // Copy Old Memory Contents To New Memory
-    for (uint32 i = 0; i < (max_allocs / 2); ++i) {
+    for (uint32 i = 0; i < max_allocs; i++) {
       new_allocs[i] = allocs[i];
     }
 
     // Free Old Allocation Data
     free(allocs);
+
+    // Update Allocation Limit
+    max_allocs *= CSTRING_EXT;
 
     // Update Allocation Table
     allocs = new_allocs;
