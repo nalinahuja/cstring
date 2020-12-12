@@ -33,7 +33,7 @@ typedef struct string {
 
 // String Allocation Table
 uint32 max_allocs, num_allocs;
-static string ** cstring_allocs = NULL;
+static string ** cstring_allocs;
 
 // Synchronization Mutex Lock
 static pthread_mutex_t cstring_mutex;
