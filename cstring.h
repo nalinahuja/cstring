@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <pthread.h>
 
 // Return Constants
@@ -74,7 +75,7 @@ void add_alloc(string * s) {
   if ((num_allocs + 1) < max_allocs) {
     // Iterate Over Allocation Table
     for (uint32 i = 0; i < max_allocs; ++i) {
-      if (!(allocs[i])) {
+      if (!(cstring_allocs[i])) {
         // Update Num Allocs
         if (i > num_allocs) {
           num_allocs = i;
@@ -84,7 +85,7 @@ void add_alloc(string * s) {
         s->ind = i;
 
         // Add Structure To Allocation Table
-        allocs[i] = s;
+        cstring_allocs[i] = s;
 
         // End Insertion Operation
         break;
@@ -99,17 +100,17 @@ void add_alloc(string * s) {
 
     // Copy Old Memory Contents To New Memory
     for (uint32 i = 0; i < max_allocs; i++) {
-      new_allocs[i] = allocs[i];
+      new_allocs[i] = cstring_allocs[i];
     }
 
     // Free Old Allocation Data
-    free(allocs);
+    free(cstring_allocs);
 
     // Update Allocation Limit
     max_allocs *= CSTRING_EXT;
 
     // Update Allocation Table
-    allocs = new_allocs;
+    cstring_allocs = new_allocs;
 
     // Retry Add Operation
     add_alloc(s);
@@ -125,16 +126,16 @@ void remove_alloc(string * s) {
   verify((s) && (s->str), "[remove_alloc] arguments to the function or components of the string structure are null");
 
   // Remove String Structure By Index
-  if ((s->ind < max_allocs) && (allocs[s->ind] == s)) {
-    allocs[s->ind] = NULL;
+  if ((s->ind < max_allocs) && (cstring_allocs[s->ind] == s)) {
+    cstring_allocs[s->ind] = NULL;
     return;
   }
 
   // Remove String Structure Via Pointer
   for (uint32 i = 0; i < max_allocs; ++i) {
     // Remove Strucutre From Table
-    if (allocs[i] == s) {
-      allocs[i] = NULL;
+    if (cstring_allocs[i] == s) {
+      cstring_allocs[i] = NULL;
       break;
     }
   }
@@ -289,23 +290,23 @@ void delete_all(void) {
   pthread_mutex_lock(&cstring_mutex);
 
   // Verify Allocation Table
-  if (allocs) {
+  if (cstring_allocs) {
     // Free String Allocations
     for (uint32 i = 0; i < max_allocs; ++i) {
-      if (allocs[i]) {
+      if (cstring_allocs[i]) {
         // Free String Memory
-        free(allocs[i]->str);
-        allocs[i]->str = NULL;
+        free(cstring_allocs[i]->str);
+        cstring_allocs[i]->str = NULL;
 
         // Free Structure Memory
-        free(allocs[i]);
-        allocs[i] = NULL;
+        free(cstring_allocs[i]);
+        cstring_allocs[i] = NULL;
       }
     }
 
     // Free Allocation Table Memory
-    free(allocs);
-    allocs = NULL;
+    free(cstring_allocs);
+    cstring_allocs = NULL;
   }
 
   // Unlock Mutex
@@ -520,21 +521,21 @@ char rem(string * s, uint32 i) {
   if (i >= (s->len)) {
     // Return Error
     return (CSTRING_ERR);
-  } else {
-    // Store Removed Character
-    char rc = s->str[i];
-
-    // Left Shift String
-    for (uint32 j = i; j < (s->len); ++j) {
-      s->str[j] = s->str[j + 1];
-    }
-
-    // Update String Length
-    s->len -= 1;
-
-    // Return Removed Character
-    return (rc);
   }
+
+  // Store Removed Character
+  char rc = s->str[i];
+
+  // Left Shift String
+  for (uint32 j = i; j < (s->len); ++j) {
+    s->str[j] = s->str[j + 1];
+  }
+
+  // Update String Length
+  s->len -= 1;
+
+  // Return Removed Character
+  return (rc);
 }
 
 /*
