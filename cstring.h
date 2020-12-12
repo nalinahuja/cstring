@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <pthread.h>
 
 // Return Constants
@@ -577,10 +576,10 @@ static void cstring_init(void) {
   max_allocs = CSTRING_ALC, num_allocs = 0;
 
   // Initialize Allocation Table
-  allocs = (string **) calloc(sizeof(string *), max_allocs);
+  cstring_allocs = (string **) calloc(sizeof(string *), max_allocs);
 
   // Verify Allocation Table
-  verify(allocs, "[init] failed to initialize allocation table");
+  verify(cstring_allocs, "[init] failed to initialize allocation table");
 
   // Set Exit Procedure
   atexit(delete_all);
