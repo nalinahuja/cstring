@@ -257,11 +257,17 @@ void clear(string * s) {
   // Verify Arguments
   verify((s) && (s->str), "[clear] arguments to the function or components of the string structure are null");
 
+  // Lock Mutex
+  pthread_mutex_lock(&cstring_mutex);
+
   // Reset Contents Of String
   memset(s->str, 0, s->cap);
 
   // Reset String Length
   s->len = 0;
+
+  // Unlock Mutex
+  pthread_mutex_unlock(&cstring_mutex);
 }
 
 /*
@@ -373,7 +379,7 @@ string * substrn(string * s, uint32 i, uint32 j) {
     // Unset Null Terminator
     dup[j - i] = rc;
 
-    // Return Duplicate String From [i, j)
+    // Return Substring From [i, j)
     return (sub);
   }
 
