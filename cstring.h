@@ -18,7 +18,6 @@
 // Numerical Types
 typedef int int32;
 typedef unsigned int uint32;
-typedef unsigned char uint8;
 
 // String Type
 typedef struct string {
@@ -501,7 +500,7 @@ int32 find(string * s, char * c) {
  * get - gets the ith character in string
  */
 
-uint8 get(string * s, uint32 i) {
+char get(string * s, uint32 i) {
   // Verify Arguments
   verify((s) && (s->str), "[get] arguments to the function or components of the string structure are null");
 
@@ -513,7 +512,7 @@ uint8 get(string * s, uint32 i) {
  * rem - removes the ith character in string
  */
 
-uint8 rem(string * s, uint32 i) {
+char rem(string * s, uint32 i) {
   // Verify Arguments
   verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
 
@@ -523,7 +522,7 @@ uint8 rem(string * s, uint32 i) {
     return (CSTRING_ERR);
   } else {
     // Store Removed Character
-    uint8 rc = s->str[i];
+    char rc = s->str[i];
 
     // Left Shift String
     for (uint32 j = i; j < (s->len); ++j) {
@@ -542,7 +541,7 @@ uint8 rem(string * s, uint32 i) {
  * set - sets the ith character in string
  */
 
-uint8 set(string * s, uint32 i, uint8 c) {
+char set(string * s, uint32 i, char c) {
   // Verify Arguments
   verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
 
@@ -550,16 +549,16 @@ uint8 set(string * s, uint32 i, uint8 c) {
   if (i >= (s->len)) {
     // Return Error
     return (CSTRING_ERR);
-  } else {
-    // Store Overwritten Character
-    uint8 oc = s->str[i];
-
-    // Set ith Character In String
-    s->str[i] = c;
-
-    // Return Overwritten Character
-    return (oc);
   }
+
+  // Store Overwritten Character
+  char oc = s->str[i];
+
+  // Set Character In String
+  s->str[i] = c;
+
+  // Return Overwritten Character
+  return (oc);
 }
 
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
