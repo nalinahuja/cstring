@@ -27,9 +27,14 @@ typedef struct string {
 
 // End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-static pthread_mutex_t mutex;
+// String Allocation Table
+uint32 max_allocs, num_allocs;
+static string ** cstring_allocs = NULL;
 
-// End Synchronization Resources-------------------------------------------------------------------------------------------------------------------------------------------
+// Synchronization Mutex Lock
+static pthread_mutex_t cstring_mutex;
+
+// End Global Variables----------------------------------------------------------------------------------------------------------------------------------------------------
 
 static void cstring_init(void) __attribute__ ((constructor));
 
@@ -53,10 +58,6 @@ void verify(bool cmp, char * err_msg) {
 }
 
 // End Verify Function-----------------------------------------------------------------------------------------------------------------------------------------------------
-
-// String Allocation Table
-uint32 max_allocs, num_allocs;
-string ** allocs = NULL;
 
 /*
  * add_alloc - adds a string structure to allocation table
@@ -144,7 +145,7 @@ void remove_alloc(string * s) {
 
 string * cstring(char * istr) {
   // Lock Mutex
-  pthread_mutex_lock(&mutex);
+  pthread_mutex_lock(&cstring_mutex);
 
   // Calculate Memory Requirements
   uint32 init_mem = CSTRING_ALC;
@@ -189,7 +190,7 @@ string * cstring(char * istr) {
   add_alloc(s);
 
   // Unlock Mutex
-  pthread_mutex_unlock(&mutex);
+  pthread_mutex_unlock(&cstring_mutex);
 
   // Return String Pointer
   return (s);
@@ -201,7 +202,7 @@ string * cstring(char * istr) {
  * cap - returns capacity of indicated string
  */
 
-inline int cap(string * s) {
+int cap(string * s) {
   // Verify Arguments
   verify(s, "[cap] the structure is null");
 
@@ -213,7 +214,7 @@ inline int cap(string * s) {
  * len - returns length of indicated string
  */
 
-inline int len(string * s) {
+int len(string * s) {
   // Verify Arguments
   verify(s, "[len] the structure is null");
 
@@ -225,7 +226,7 @@ inline int len(string * s) {
  * str - returns contents of indicated string
  */
 
-inline char * str(string * s) {
+char * str(string * s) {
   // Verify Arguments
   verify((s) && (s->str), "[str] arguments to the function or components of the string structure are null");
 
@@ -259,7 +260,7 @@ void delete(string * s) {
   verify(s, "[delete] the structure is null");
 
   // Lock Mutex
-  pthread_mutex_lock(&mutex);
+  pthread_mutex_lock(&cstring_mutex);
 
   // Remove Structure From Table
   remove_alloc(s);
@@ -273,7 +274,7 @@ void delete(string * s) {
   s = NULL;
 
   // Unlock Mutex
-  pthread_mutex_unlock(&mutex);
+  pthread_mutex_unlock(&cstring_mutex);
 }
 
 /*
@@ -282,7 +283,7 @@ void delete(string * s) {
 
 void delete_all(void) {
   // Lock Mutex
-  pthread_mutex_lock(&mutex);
+  pthread_mutex_lock(&cstring_mutex);
 
   // Verify Allocation Table
   if (allocs) {
@@ -305,7 +306,7 @@ void delete_all(void) {
   }
 
   // Unlock Mutex
-  pthread_mutex_unlock(&mutex);
+  pthread_mutex_unlock(&cstring_mutex);
 }
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
@@ -444,7 +445,7 @@ bool insert(string * s, char * c, uint32 k) {
  * append - appends a character string to string structure
  */
 
-inline bool append(string * s, char * c) {
+bool append(string * s, char * c) {
   // Verify Arguments
   verify((s) && (s->str) && (c), "[append] arguments to the function or components of the string structure are null");
 
@@ -456,7 +457,7 @@ inline bool append(string * s, char * c) {
  * prepend - prepends a character string to string structure
  */
 
-inline bool prepend(string * s, char * c) {
+bool prepend(string * s, char * c) {
   // Verify Arguments
   verify((s) && (s->str) && (c), "[prepend] arguments to the function or components of the string structure are null");
 
@@ -468,7 +469,7 @@ inline bool prepend(string * s, char * c) {
  * concat - concatenates two string structres into a new string struture
  */
 
-inline bool concat(string * s1, string * s2) {
+bool concat(string * s1, string * s2) {
   // Verify Arguments
   verify((s1) && (s2) && (s1->str) && (s2->str), "[concat] arguments to the function or components of the string structure are null");
 
@@ -565,7 +566,7 @@ uint8 set(string * s, uint32 i, uint8 c) {
 
 static void cstring_init(void) {
   // Initialize Mutex Lock
-  pthread_mutex_init(&mutex, NULL);
+  pthread_mutex_init(&cstring_mutex, NULL);
 
   // Initialize Allocation Counters
   max_allocs = CSTRING_ALC, num_allocs = 0;
