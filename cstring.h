@@ -81,11 +81,11 @@ void add_alloc(string * s) {
           num_allocs = i;
         }
 
-        // Set Internal Structure Index
-        s->ind = i;
-
         // Add Structure To Allocation Table
         cstring_allocs[i] = s;
+
+        // Set Internal Structure Index
+        s->ind = i;
 
         // End Insertion Operation
         break;
@@ -127,16 +127,19 @@ void remove_alloc(string * s) {
 
   // Remove String Structure By Index
   if ((s->ind < max_allocs) && (cstring_allocs[s->ind] == s)) {
+    // Remove Pointer From Allocation Table
     cstring_allocs[s->ind] = NULL;
-    return;
-  }
+  } else {
+    // Remove String Structure Via Pointer
+    for (uint32 i = 0; i < max_allocs; ++i) {
+      // Remove Strucutre From Table
+      if (cstring_allocs[i] == s) {
+        // Remove Pointer From Allocation Table
+        cstring_allocs[i] = NULL;
 
-  // Remove String Structure Via Pointer
-  for (uint32 i = 0; i < max_allocs; ++i) {
-    // Remove Strucutre From Table
-    if (cstring_allocs[i] == s) {
-      cstring_allocs[i] = NULL;
-      break;
+        // End Removal Operation
+        break;
+      }
     }
   }
 }
@@ -151,13 +154,15 @@ string * cstring(char * istr) {
   // Lock Mutex
   pthread_mutex_lock(&cstring_mutex);
 
-  // Calculate Memory Requirements
-  uint32 init_mem = CSTRING_ALC;
-  uint32 init_len = 0;
+  // Set Default String Attributes
+  uint32 init_mem = CSTRING_ALC, init_len = 0;
 
-  // Update Memory Requirements
+  // Update String Attributes
   if (istr) {
+    // Update Length
     init_len = strlen(istr);
+
+    // Update Memory
     init_mem += init_len;
   }
 
@@ -169,16 +174,20 @@ string * cstring(char * istr) {
   s->cap = init_mem;
   s->len = init_len;
 
-  // Verify String Memory
+  // Verify Strucutre Memory
   if (!(s) || !(s->str)) {
-    if (!(s)) {
-      free(s);
-      s = NULL;
-    }
-
-    if (!(s->str)) {
+    // Check String Memory
+    if (s->str) {
+      // Unload String Memory
       free(s->str);
       s->str = NULL;
+    }
+
+    // Check Structure Memory
+    if (s) {
+      // Unload Structure Memory
+      free(s);
+      s = NULL;
     }
 
     // Verify Arguments
@@ -190,7 +199,7 @@ string * cstring(char * istr) {
     strncpy(s->str, istr, init_len);
   }
 
-  // Add Allocation To Table
+  // Add Structure Allocation To Table
   add_alloc(s);
 
   // Unlock Mutex
@@ -391,11 +400,10 @@ bool insert(string * s, char * c, uint32 k) {
   uint32 req_len = strlen(c);
 
   // Calculate Memory Requirements
-  uint32 str_mem = (s->cap);
   uint32 req_mem = (s->len + req_len);
 
   // Compare Memory Values
-  if (str_mem >= req_mem) {
+  if ((s->cap) >= req_mem) {
     // Sufficient Memory
     if (k < s->len) {
       // Perform Shifts
