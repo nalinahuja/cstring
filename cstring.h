@@ -31,7 +31,7 @@ typedef struct string {
 // End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // String Allocation Table
-uint32 max_allocs, num_allocs;
+static uint32 max_allocs, num_allocs;
 static string ** cstring_allocs;
 
 // Synchronization Mutex Lock
@@ -45,7 +45,7 @@ static void cstring_init(void) __attribute__ ((constructor));
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * verify - displays an error message if comparision fails
+ * verify - Displays An Error Message If Comparision Fails
  */
 
 void verify(bool cmp, char * msg) {
@@ -64,7 +64,7 @@ void verify(bool cmp, char * msg) {
 // End Verify Function-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * add_alloc - adds a string structure to allocation table
+ * add_alloc - Adds A String Structure To Allocation Table
  */
 
 void add_alloc(string * s) {
@@ -118,7 +118,7 @@ void add_alloc(string * s) {
 }
 
 /*
- * remove_alloc - removes a string structure to allocation table
+ * remove_alloc - Removes A String Structure From The Allocation Table
  */
 
 void remove_alloc(string * s) {
@@ -147,7 +147,7 @@ void remove_alloc(string * s) {
 // End Structure Table-----------------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * cstring - returns a new string
+ * cstring - Returns A New String
  */
 
 string * cstring(char * istr) {
@@ -212,7 +212,7 @@ string * cstring(char * istr) {
 // End String Initializer--------------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * cap - returns capacity of indicated string
+ * cap - Returns Capacity Of Indicated String
  */
 
 int cap(string * s) {
@@ -224,7 +224,7 @@ int cap(string * s) {
 }
 
 /*
- * len - returns length of indicated string
+ * len - Returns Length Of Indicated String
  */
 
 int len(string * s) {
@@ -236,7 +236,7 @@ int len(string * s) {
 }
 
 /*
- * str - returns contents of indicated string
+ * str - Returns Contents Of Indicated String
  */
 
 char * str(string * s) {
@@ -250,7 +250,7 @@ char * str(string * s) {
 // End Field Access Functions----------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * clear - resets contents of indicated string
+ * clear - Resets Contents Of Indicated String
  */
 
 void clear(string * s) {
@@ -271,7 +271,7 @@ void clear(string * s) {
 }
 
 /*
- * delete - frees memory of indicated string
+ * delete - Frees Memory Of Indicated String
  */
 
 void delete(string * s) {
@@ -297,7 +297,7 @@ void delete(string * s) {
 }
 
 /*
- * delete_all - frees memory of all strings
+ * delete_all - Frees Memory Of All String Allocations
  */
 
 void delete_all(void) {
@@ -331,7 +331,7 @@ void delete_all(void) {
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * copy - returns a copy of indicated string
+ * copy - Returns A Copy Of Indicated String
  */
 
 string * copy(string * s) {
@@ -343,7 +343,7 @@ string * copy(string * s) {
 }
 
 /*
- * substr - returns a copy of indicated string from [i, len(s)]
+ * substr - Returns A Copy Of Indicated String From [i, len(s)]
  */
 
 string * substr(string * s, uint32 i) {
@@ -355,7 +355,7 @@ string * substr(string * s, uint32 i) {
 }
 
 /*
- * substrn - returns a copy of indicated string from [i, j)
+ * substrn - Returns A Copy Of Indicated String From [i, j)
  */
 
 string * substrn(string * s, uint32 i, uint32 j) {
@@ -390,7 +390,7 @@ string * substrn(string * s, uint32 i, uint32 j) {
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * insert - inserts a substring at kth index
+ * insert - Inserts A Substring At kth Index
  */
 
 bool insert(string * s, char * c, uint32 k) {
@@ -460,7 +460,7 @@ bool insert(string * s, char * c, uint32 k) {
 }
 
 /*
- * append - appends a character string to string structure
+ * append - Appends A Character String To String Structure
  */
 
 bool append(string * s, char * c) {
@@ -472,7 +472,7 @@ bool append(string * s, char * c) {
 }
 
 /*
- * prepend - prepends a character string to string structure
+ * prepend - Prepends A Character String To String Structure
  */
 
 bool prepend(string * s, char * c) {
@@ -484,7 +484,7 @@ bool prepend(string * s, char * c) {
 }
 
 /*
- * concat - concatenates two string structres into a new string struture
+ * concat - Concatenates Two String Structres Into A New String Struture
  */
 
 bool concat(string * s1, string * s2) {
@@ -497,7 +497,7 @@ bool concat(string * s1, string * s2) {
 // End String Manipulation Functions---------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * find - determines the position of substring
+ * find - Determines The Position Of Substring
  */
 
 int32 find(string * s, char * c) {
@@ -512,7 +512,7 @@ int32 find(string * s, char * c) {
 }
 
 /*
- * get - gets the ith character in string
+ * get - Gets The ith Character In String
  */
 
 char get(string * s, uint32 i) {
@@ -524,7 +524,7 @@ char get(string * s, uint32 i) {
 }
 
 /*
- * rem - removes the ith character in string
+ * rem - Removes The ith Character In Indicated String
  */
 
 char rem(string * s, uint32 i) {
@@ -553,7 +553,7 @@ char rem(string * s, uint32 i) {
 }
 
 /*
- * set - sets the ith character in string
+ * set - Sets The ith Character In Indicated String
  */
 
 char set(string * s, uint32 i, char c) {
@@ -579,7 +579,7 @@ char set(string * s, uint32 i, char c) {
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * cstring_init - initializes cstring program
+ * cstring_init - Initializes cstring Program
  */
 
 static void cstring_init(void) {
