@@ -11,10 +11,6 @@
 #define CSTRING_ERR (1)
 #define CSTRING_EOL (-1)
 
-// Allocation Constants
-#define CSTRING_EXT (2)
-#define CSTRING_ALC (15)
-
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
 // Numerical Types
@@ -23,10 +19,14 @@ typedef unsigned int uint32;
 
 // String Type
 typedef struct string {
+  // Public Attributes
   char * str;
   uint32 cap;
   uint32 len;
-  uint32 ind;
+
+  // Private Attributes
+  struct string * _prev;
+  struct string * _next;
 } string;
 
 // End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
