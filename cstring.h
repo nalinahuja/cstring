@@ -31,15 +31,15 @@ typedef struct string {
 
 // End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// String Allocation List
+// Allocation List
 static string * cstring_list;
 
-// Synchronization Mutex Lock
+// Mutex Lock
 static pthread_mutex_t cstring_mutex;
 
 // End Global Variables----------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Initialization Constructor
+// Library Constructor
 static void cstring_init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ void verify(bool cmp, char * msg) {
 
 void add_alloc(string * s) {
   // Verify Arguments
-  verify(s, "[add_alloc] failed to add string allocation to table");
+  verify(s, "[add_alloc] failed to add string allocation to list");
 
   // Check Available Memory
   if ((num_allocs + 1) < max_allocs) {
@@ -560,6 +560,9 @@ char set(string * s, uint32 i, char c) {
   // Verify Arguments
   verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
 
+  // 
+  verify((s) && (s->str), "[set] string index out of range");
+
   // Verify Index Range
   if (i >= (s->len)) {
     // Return Error
@@ -579,21 +582,12 @@ char set(string * s, uint32 i, char c) {
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * cstring_init - Initializes cstring Program
+ * cstring_init - Initializes Library
  */
 
 static void cstring_init(void) {
   // Initialize Mutex Lock
   pthread_mutex_init(&cstring_mutex, NULL);
-
-  // Initialize Allocation Counters
-  max_allocs = CSTRING_ALC, num_allocs = 0;
-
-  // Initialize Allocation Table
-  cstring_allocs = (string **) calloc(sizeof(string *), max_allocs);
-
-  // Verify Allocation Table
-  verify(cstring_allocs, "[init] failed to initialize allocation table");
 
   // Set Exit Procedure
   atexit(delete_all);
