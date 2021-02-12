@@ -1,13 +1,14 @@
 // Developed by Nalin Ahuja, nalinahuja22
 
+// Header Files
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include <pthread.h>
 
 // Return Constants
-#define CSTRING_SUC (1)
-#define CSTRING_ERR (0)
+#define CSTRING_SUC (0)
+#define CSTRING_ERR (1)
 #define CSTRING_EOL (-1)
 
 // Allocation Constants
