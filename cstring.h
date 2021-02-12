@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <pthread.h>
 
-// Return Constants
+// Return Values
 #define CSTRING_SUC (0)
 #define CSTRING_ERR (1)
 #define CSTRING_EOL (-1)
