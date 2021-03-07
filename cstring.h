@@ -34,7 +34,7 @@ typedef struct string {
 // Allocation List
 static string * cstring_list;
 
-// Mutex Lock
+// Thread Mutex Lock
 static pthread_mutex_t cstring_mutex;
 
 // End Global Variables----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -45,29 +45,25 @@ static void cstring_init(void) __attribute__ ((constructor));
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * verify - Displays An Error Message If Comparision Fails
+ *  - Displays An Error Message Before Exiting Program
  */
 
-void verify(bool cmp, char * msg) {
-  if (!(cmp)) {
-    // Flush All Output Streams
-    fflush(NULL);
+void arg_error(char * msg) {
+  // Flush All Output Streams
+  fflush(NULL);
 
-    // Display Error Message
-    printf("\ncstring: %s\n", msg);
+  // Display Error Message
+  printf("\ncstring: %s\n", msg);
 
-    // Exit Program
-    exit(1);
-  }
+  // Exit Program
+  exit(1);
 }
 
-// End Verify Function-----------------------------------------------------------------------------------------------------------------------------------------------------
-
 /*
- * add_alloc - Adds A String Structure To Allocation Table
+ * add_allocation - Adds A String Structure To Allocation Table
  */
 
-void add_alloc(string * s) {
+void add_allocation(string * s) {
   // Verify Arguments
   verify(s, "[add_alloc] failed to add string allocation to list");
 
@@ -121,7 +117,7 @@ void add_alloc(string * s) {
  * remove_alloc - Removes A String Structure From The Allocation Table
  */
 
-void remove_alloc(string * s) {
+void remove_allocation(string * s) {
   // Verify Arguments
   verify((s) && (s->str), "[remove_alloc] arguments to the function or components of the string structure are null");
 
@@ -144,7 +140,7 @@ void remove_alloc(string * s) {
   }
 }
 
-// End Structure Table-----------------------------------------------------------------------------------------------------------------------------------------------------
+// End Private Library Functions-------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
  * cstring - Returns A New String
@@ -216,8 +212,10 @@ string * cstring(char * istr) {
  */
 
 int cap(string * s) {
-  // Verify Arguments
-  verify(s, "[cap] the structure is null");
+  // Verify Parameters
+  if (!(s)) {
+    error("[cap] structure is NULL");
+  }
 
   // Return String Capacity
   return (s->cap);
@@ -228,8 +226,10 @@ int cap(string * s) {
  */
 
 int len(string * s) {
-  // Verify Arguments
-  verify(s, "[len] the structure is null");
+  // Verify Parameters
+  if (!(s)) {
+    error("[len] structure is NULL");
+  }
 
   // Return String Length
   return (s->len);
@@ -240,8 +240,12 @@ int len(string * s) {
  */
 
 char * str(string * s) {
-  // Verify Arguments
-  verify((s) && (s->str), "[str] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (!(s)) {
+    error("[str] structure is NULL");
+  } else if (!(s->str)) {
+    error("[str] string attribute is NULL")
+  }
 
   // Return String Pointer
   return (s->str);
@@ -254,19 +258,20 @@ char * str(string * s) {
  */
 
 void clear(string * s) {
-  // Verify Arguments
-  verify((s) && (s->str), "[clear] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (!(s)) {
+    error("[clear] structure is NULL");
+  } else if (!(s->str)) {
+    error("[clear] string attribute is NULL");
+  }
 
-  // Lock Mutex
+  // Lock Thread Mutex
   pthread_mutex_lock(&cstring_mutex);
-
-  // Reset Contents Of String
-  memset(s->str, 0, s->cap);
 
   // Reset String Length
   s->len = 0;
 
-  // Unlock Mutex
+  // Unlock Thread Mutex
   pthread_mutex_unlock(&cstring_mutex);
 }
 
@@ -275,14 +280,18 @@ void clear(string * s) {
  */
 
 void delete(string * s) {
-  // Verify Arguments
-  verify(s, "[delete] the structure is null");
+  // Verify Parameters
+  if (!(s)) {
+    error("[delete] structure is NULL");
+  } else if (!(s->str)) {
+    error("[delete] string attribute is NULL");
+  }
 
-  // Lock Mutex
+  // Lock Thread Mutex
   pthread_mutex_lock(&cstring_mutex);
 
-  // Remove Structure From Table
-  remove_alloc(s);
+  // Remove Allocation From List
+  remove_allocation(s);
 
   // Free String Memory
   free(s->str);
@@ -292,7 +301,7 @@ void delete(string * s) {
   free(s);
   s = NULL;
 
-  // Unlock Mutex
+  // Unlock Thread Mutex
   pthread_mutex_unlock(&cstring_mutex);
 }
 
@@ -335,6 +344,9 @@ void delete_all(void) {
  */
 
 string * copy(string * s) {
+  // Verify Argument
+
+
   // Verify Arguments
   verify((s) && (s->str), "[copy] arguments to the function or components of the string structure are null");
 
@@ -560,7 +572,7 @@ char set(string * s, uint32 i, char c) {
   // Verify Arguments
   verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
 
-  // 
+  //
   verify((s) && (s->str), "[set] string index out of range");
 
   // Verify Index Range
@@ -586,7 +598,7 @@ char set(string * s, uint32 i, char c) {
  */
 
 static void cstring_init(void) {
-  // Initialize Mutex Lock
+  // Initialize Synchronization Lock
   pthread_mutex_init(&cstring_mutex, NULL);
 
   // Set Exit Procedure
