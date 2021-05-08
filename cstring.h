@@ -7,8 +7,8 @@
 #include <pthread.h>
 
 // Return Values
-#define CSTRING_SUC (0)
-#define CSTRING_ERR (1)
+#define CSTRING_SUC (1)
+#define CSTRING_ERR (0)
 #define CSTRING_EOL (-1)
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ typedef struct string {
 // End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Allocation List
-static string * cstring_list;
+static string * cstring_allocs;
 
 // Thread Mutex Lock
 static pthread_mutex_t cstring_mutex;
@@ -45,10 +45,10 @@ static void cstring_init(void) __attribute__ ((constructor));
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- *  - Displays An Error Message Before Exiting Program
+ * arg_error - Displays An Error Message Before Exiting Program
  */
 
-void arg_error(char * msg) {
+void prerror(char * msg) {
   // Flush All Output Streams
   fflush(NULL);
 
@@ -60,10 +60,13 @@ void arg_error(char * msg) {
 }
 
 /*
- * add_allocation - Adds A String Structure To Allocation Table
+ * add_alloc - Adds A String Structure To Allocation List
  */
 
-void add_allocation(string * s) {
+void add_alloc(string * s) {
+
+
+
   // Verify Arguments
   verify(s, "[add_alloc] failed to add string allocation to list");
 
@@ -212,8 +215,8 @@ string * cstring(char * istr) {
  */
 
 int cap(string * s) {
-  // Verify Parameters
-  if (!(s)) {
+  // Verify Argument
+  if (s == NULL) {
     error("[cap] structure is NULL");
   }
 
