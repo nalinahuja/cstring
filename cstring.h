@@ -15,6 +15,7 @@
 
 // Numerical Types
 typedef int int32;
+typedef unsigned char byte;
 typedef unsigned int uint32;
 
 // String Type
@@ -64,7 +65,7 @@ void _print_exit(char * msg) {
  */
 
 void _add_alloc(string * s) {
-  // TODO: create linked list
+  // TODO
 }
 
 /*
@@ -72,7 +73,7 @@ void _add_alloc(string * s) {
  */
 
 void _remove_alloc(string * s) {
-  // TODO: remove linked list
+  // TODO
 }
 
 // End Private Library Functions-------------------------------------------------------------------------------------------------------------------------------------------
@@ -243,7 +244,7 @@ void delete_all(void) {
   // Lock Mutex
   pthread_mutex_lock(&cstring_mutex);
 
-  // TODO: iterate over linked list
+  // TODO
 
   // Unlock Mutex
   pthread_mutex_unlock(&cstring_mutex);
@@ -277,10 +278,12 @@ string * substr(string * s, uint32 i) {
     _print_exit("[substr] pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[substr] string attribute is NULL");
+  } else if (i >= s->len) {
+    _print_exit("[substr] string index out of bounds");
   }
 
   // Return Substring From [i, len(s))
-  return ((i >= s->len) ? (NULL) : (cstring(s->str + i)));
+  return (cstring(s->str + i));
 }
 
 /*
@@ -293,52 +296,43 @@ string * substrn(string * s, uint32 i, uint32 j) {
     _print_exit("[substrn] pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[substrn] string attribute is NULL");
+  } else if (!(i < j) || !(j <= s->len)) {
+    _print_exit("[substrn] string index out of bounds");
   }
 
-  // Range Check Indices
-  if ((i < j) && (j <= s->len)) {
-    // Get Substring From ith Index
-    char * dup = (s->str + i);
+  // Get Substring From ith Index
+  char * dup = (s->str + i);
 
-    // Store Removed Character
-    char rc = dup[j - i];
+  // Store Removed Character
+  char rc = dup[j - i];
 
-    // Set Null Terminator
-    dup[j - i] = 0;
+  // Set Null Terminator
+  dup[j - i] = 0;
 
-    // Create Substring
-    string * sub = (cstring(dup));
+  // Create Substring
+  string * sub = (cstring(dup));
 
-    // Unset Null Terminator
-    dup[j - i] = rc;
+  // Unset Null Terminator
+  dup[j - i] = rc;
 
-    // Return Substring From [i, j)
-    return (sub);
-  }
-
-  // Return NULL Pointer
-  return (NULL);
+  // Return Substring From [i, j)
+  return (sub);
 }
 
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * insert - Inserts A Substring At kth Index
+ * insert - Inserts A Substring At ith Index
  */
 
-bool insert(string * s, char * c, uint32 k) {
+byte insert(string * s, char * c, uint32 i) {
   // Verify Parameters
   if (s == NULL) {
     _print_exit("[insert] pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[insert] string attribute is NULL");
-  } else if (k > s->len) {
-    _print_exit("[insert] string attribute is NULL");
-  }
-
-  // Verify Index Range
-  if (k > (s->len)) {
-    return (CSTRING_ERR);
+  } else if (i > s->len) {
+    _print_exit("[insert] string index out of bounds");
   }
 
   // Calculate Updated String Length
@@ -393,7 +387,7 @@ bool insert(string * s, char * c, uint32 k) {
     s->cap = new_mem;
 
     // Retry Insertion Operation
-    insert(s, c, k);
+    insert(s, c, i);
   }
 
   // Return Success
@@ -404,7 +398,7 @@ bool insert(string * s, char * c, uint32 k) {
  * append - Appends A Character String To String Structure
  */
 
-bool append(string * s, char * c) {
+byte append(string * s, char * c) {
   // Verify Arguments
   verify((s) && (s->str) && (c), "[append] arguments to the function or components of the string structure are null");
 
@@ -416,7 +410,7 @@ bool append(string * s, char * c) {
  * prepend - Prepends A Character String To String Structure
  */
 
-bool prepend(string * s, char * c) {
+byte prepend(string * s, char * c) {
   // Verify Arguments
   verify((s) && (s->str) && (c), "[prepend] arguments to the function or components of the string structure are null");
 
@@ -428,7 +422,7 @@ bool prepend(string * s, char * c) {
  * concat - Concatenates Two String Structres Into A New String Struture
  */
 
-bool concat(string * s1, string * s2) {
+byte concat(string * s1, string * s2) {
   // Verify Arguments
   verify((s1) && (s2) && (s1->str) && (s2->str), "[concat] arguments to the function or components of the string structure are null");
 
