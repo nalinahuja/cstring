@@ -461,7 +461,7 @@ int32 find(string * s, char * c) {
   } else if (s->str == NULL) {
     _print_exit("[find] string attribute is NULL");
   } else if (c == NULL) {
-    _print_exit("[find] character pointer index out of bounds");
+    _print_exit("[find] pattern string is NULL");
   }
 
   // Get Substring Position
@@ -478,7 +478,7 @@ int32 find(string * s, char * c) {
 char get(string * s, uint32 i) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[get] pointer is NULL");
+    _print_exit("[get] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[get] string attribute is NULL");
   } else if (i >= (s->len)) {
@@ -496,20 +496,11 @@ char get(string * s, uint32 i) {
 char rem(string * s, uint32 i) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[get] pointer is NULL");
+    _print_exit("[get] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[get] string attribute is NULL");
   } else if (i >= (s->len)) {
     _print_exit("[find] string index out of bounds");
-  }
-
-  // Verify Arguments
-  verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
-
-  // Verify Index Range
-  if (i >= (s->len)) {
-    // Return Error
-    return (CSTRING_ERR);
   }
 
   // Store Removed Character
@@ -532,16 +523,13 @@ char rem(string * s, uint32 i) {
  */
 
 char set(string * s, uint32 i, char c) {
-  // Verify Arguments
-  verify((s) && (s->str), "[set] arguments to the function or components of the string structure are null");
-
-  //
-  verify((s) && (s->str), "[set] string index out of range");
-
-  // Verify Index Range
-  if (i >= (s->len)) {
-    // Return Error
-    return (CSTRING_ERR);
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[get] string pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[get] string attribute is NULL");
+  } else if (i >= (s->len)) {
+    _print_exit("[find] string index out of bounds");
   }
 
   // Store Overwritten Character
