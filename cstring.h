@@ -8,8 +8,8 @@
 // Embedded Values
 #define CSTRING_SUC (1)
 #define CSTRING_ERR (0)
-#define CSTRING_EOL (-1)
 #define CSTRING_ALC (16)
+#define CSTRING_EOL (-1)
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
