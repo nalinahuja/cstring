@@ -7,8 +7,8 @@
 #include <pthread.h>
 
 // Return Values
-#define CSTRING_SUC (1)
-#define CSTRING_ERR (0)
+#define CSTRING_SUC (true)
+#define CSTRING_ERR (false)
 #define CSTRING_EOL (-1)
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
@@ -45,10 +45,10 @@ static void cstring_init(void) __attribute__ ((constructor));
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * arg_error - Displays An Error Message Before Exiting Program
+ * _print_exit - Prints An Error Message Before Exiting Program
  */
 
-void prerror(char * msg) {
+void _print_exit(char * msg) {
   // Flush All Output Streams
   fflush(NULL);
 
@@ -59,94 +59,10 @@ void prerror(char * msg) {
   exit(1);
 }
 
-/*
- * add_alloc - Adds A String Structure To Allocation List
- */
-
-void add_alloc(string * s) {
-
-
-
-  // Verify Arguments
-  verify(s, "[add_alloc] failed to add string allocation to list");
-
-  // Check Available Memory
-  if ((num_allocs + 1) < max_allocs) {
-    // Iterate Over Allocation Table
-    for (uint32 i = 0; i < max_allocs; ++i) {
-      if (!(cstring_allocs[i])) {
-        // Update Num Allocs
-        if (i > num_allocs) {
-          num_allocs = i;
-        }
-
-        // Add Structure To Allocation Table
-        cstring_allocs[i] = s;
-
-        // Set Internal Structure Index
-        s->ind = i;
-
-        // End Insertion Operation
-        break;
-      }
-    }
-  } else {
-    // Create Resized Allocation Table
-    string ** new_allocs = (string **) calloc(sizeof(string *), max_allocs * CSTRING_EXT);
-
-    // Verify Allocation Table
-    verify(new_allocs, "[add_alloc] failed to resize allocation table");
-
-    // Copy Old Memory Contents To New Memory
-    for (uint32 i = 0; i < max_allocs; i++) {
-      new_allocs[i] = cstring_allocs[i];
-    }
-
-    // Free Old Allocation Data
-    free(cstring_allocs);
-
-    // Update Allocation Limit
-    max_allocs *= CSTRING_EXT;
-
-    // Update Allocation Table
-    cstring_allocs = new_allocs;
-
-    // Retry Add Operation
-    add_alloc(s);
-  }
-}
-
-/*
- * remove_alloc - Removes A String Structure From The Allocation Table
- */
-
-void remove_allocation(string * s) {
-  // Verify Arguments
-  verify((s) && (s->str), "[remove_alloc] arguments to the function or components of the string structure are null");
-
-  // Remove String Structure By Index
-  if ((s->ind < max_allocs) && (cstring_allocs[s->ind] == s)) {
-    // Remove Pointer From Allocation Table
-    cstring_allocs[s->ind] = NULL;
-  } else {
-    // Remove String Structure Via Pointer
-    for (uint32 i = 0; i < max_allocs; ++i) {
-      // Remove Strucutre From Table
-      if (cstring_allocs[i] == s) {
-        // Remove Pointer From Allocation Table
-        cstring_allocs[i] = NULL;
-
-        // End Removal Operation
-        break;
-      }
-    }
-  }
-}
-
 // End Private Library Functions-------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * cstring - Returns A New String
+ * cstring - Returns A New String Allocation
  */
 
 string * cstring(char * istr) {
@@ -217,7 +133,7 @@ string * cstring(char * istr) {
 int cap(string * s) {
   // Verify Argument
   if (s == NULL) {
-    error("[cap] structure is NULL");
+    _print_exit("[cap] pointer is NULL");
   }
 
   // Return String Capacity
@@ -229,9 +145,9 @@ int cap(string * s) {
  */
 
 int len(string * s) {
-  // Verify Parameters
-  if (!(s)) {
-    error("[len] structure is NULL");
+  // Verify Argument
+  if (s == NULL) {
+    _print_exit("[len] pointer is NULL");
   }
 
   // Return String Length
@@ -243,11 +159,11 @@ int len(string * s) {
  */
 
 char * str(string * s) {
-  // Verify Parameters
-  if (!(s)) {
-    error("[str] structure is NULL");
-  } else if (!(s->str)) {
-    error("[str] string attribute is NULL")
+  // Verify Argument
+  if (s == NULL) {
+    _print_exit("[str] pointeer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[str] string attribute is NULL")
   }
 
   // Return String Pointer
