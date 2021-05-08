@@ -86,19 +86,22 @@ void _add_alloc(string * s) {
 void _remove_alloc(string * s) {
   // Verify Allocation List
   if (_alloc_list != NULL) {
-    // Unbind Left Allocation
-    if (s->_prev == NULL) {
-
+    // Decrement Allocation List Pointer
+    if (_alloc_list == s) {
+      _alloc_list = _alloc_list->_prev;
     }
 
-    // Unbind Right Allocation
-    if (s->_next == NULL) {
+    // Unbind Right Node
+    if (s->_next != NULL) {
+      s->_next->_prev = s->_prev;
+    }
 
+    // Unbind Left Node
+    if (s->_prev != NULL) {
+      s->_prev->_next = s->_next;
     }
   }
 }
-
-a-><-b-><-a-><-b
 
 // End Private Library Functions-------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -246,7 +249,7 @@ void delete(string * s) {
   pthread_mutex_lock(&_mutex);
 
   // Remove Allocation From List
-  remove_alloc(s);
+  _remove_alloc(s);
 
   // Free String Memory
   free(s->str);
@@ -269,12 +272,12 @@ void delete_all(void) {
   pthread_mutex_lock(&_mutex);
 
   // Clear Over Allocation List
-  while (_alloc_list) {
+  while (_alloc_list != NULL) {
     // Get Allocation From List
     string * s = _alloc_list;
 
     // Decrement Allocation List
-    _alloc_list = s->_prev
+    _alloc_list = _alloc_list->_prev
 
     // Free String Memory
     free(s->str);
