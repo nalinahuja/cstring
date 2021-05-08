@@ -33,7 +33,7 @@ typedef struct string {
 // End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Allocation List
-static string * _alloc_head;
+static string * _alloc_list;
 
 // Thread Mutex Lock
 static pthread_mutex_t _mutex;
@@ -66,16 +66,16 @@ void _print_exit(char * msg) {
 
 void _add_alloc(string * s) {
   // Verify Allocation List Head
-  if (_alloc_head == NULL) {
-    // Set Allocation List Head
-    _alloc_head = s;
+  if (_alloc_list == NULL) {
+    // Initialize Allocation List
+    _alloc_list = s;
   } else {
     // Apppend Allocation To List
-    _alloc_head->_next = s;
-    s->_prev = _alloc_head;
+    _alloc_list->_next = s;
+    s->_prev = _alloc_list;
 
-    // Increment Allocation List Head
-    _alloc_head = _alloc_head->_next;
+    // Increment Allocation List
+    _alloc_list = _alloc_list->_next;
   }
 }
 
@@ -84,19 +84,21 @@ void _add_alloc(string * s) {
  */
 
 void _remove_alloc(string * s) {
-  // Verify Allocation List Head
-  if (_alloc_head == NULL) {
-    // Set Allocation List Head
-    _alloc_head = s;
-  } else {
-    // Apppend Allocation To List
-    _alloc_head->_next = s;
-    s->_prev = _alloc_head;
+  // Verify Allocation List
+  if (_alloc_list != NULL) {
+    // Unbind Left Allocation
+    if (s->_prev == NULL) {
 
-    // Increment Allocation List Head
-    _alloc_head = _alloc_head->_next;
+    }
+
+    // Unbind Right Allocation
+    if (s->_next == NULL) {
+
+    }
   }
 }
+
+a-><-b-><-a-><-b
 
 // End Private Library Functions-------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -266,7 +268,22 @@ void delete_all(void) {
   // Lock Thead Mutex
   pthread_mutex_lock(&_mutex);
 
-  // TODO
+  // Clear Over Allocation List
+  while (_alloc_list) {
+    // Get Allocation From List
+    string * s = _alloc_list;
+
+    // Decrement Allocation List
+    _alloc_list = s->_prev
+
+    // Free String Memory
+    free(s->str);
+    s->str = NULL;
+
+    // Free Structure Memory
+    free(s);
+    s = NULL;
+  }
 
   // Unlock Thead Mutex
   pthread_mutex_unlock(&_mutex);
