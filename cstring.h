@@ -3,13 +3,13 @@
 // Header Files
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <pthread.h>
 
-// Return Values
-#define CSTRING_SUC (true)
-#define CSTRING_ERR (false)
+// Embedded Values
+#define CSTRING_SUC (1)
+#define CSTRING_ERR (0)
 #define CSTRING_EOL (-1)
+#define CSTRING_ALC (16)
 
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ static pthread_mutex_t cstring_mutex;
 // End Global Variables----------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Library Constructor
-static void cstring_init(void) __attribute__ ((constructor));
+static void _cstring_init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,63 +59,80 @@ void _print_exit(char * msg) {
   exit(1);
 }
 
+/*
+ * _add_alloc - Adds A String Structure To Allocation List
+ */
+
+void _add_alloc(string * s) {
+  // TODO: create linked list
+}
+
+/*
+ * _remove_alloc - Removes A String Structure From The Allocation List
+ */
+
+void _remove_alloc(string * s) {
+  // TODO: remove linked list
+}
+
 // End Private Library Functions-------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
  * cstring - Returns A New String Allocation
  */
 
-string * cstring(char * istr) {
-  // Lock Mutex
+string * cstring(char * init_str) {
+  // Lock Thread Mutex
   pthread_mutex_lock(&cstring_mutex);
 
-  // Set Default String Attributes
-  uint32 init_mem = CSTRING_ALC, init_len = 0;
+  // Initialize Default String Attributes
+  uint32 init_len = 0, init_mem = CSTRING_ALC;
 
-  // Update String Attributes
-  if (istr) {
+  // Verify Initialization String
+  if (init_str != NULL) {
     // Update Length
-    init_len = strlen(istr);
+    init_len = strlen(init_str);
 
     // Update Memory
     init_mem += init_len;
   }
 
   // Initialize String Structure
-  string * s = (string *) calloc(sizeof(string), 1);
+  string * s = (string *) malloc(sizeof(string));
 
   // Set Structure Members
   s->str = (char *) calloc(sizeof(char), init_mem);
   s->cap = init_mem;
   s->len = init_len;
 
-  // Verify Strucutre Memory
-  if (!(s) || !(s->str)) {
-    // Check String Memory
-    if (s->str) {
-      // Unload String Memory
+  // Verify Initialization
+  if ((s == NULL) || (s->str == NULL)) {
+    // Check String Allocation
+    if (s->str != NULL) {
+      // Free String Memory
       free(s->str);
       s->str = NULL;
     }
 
-    // Check Structure Memory
-    if (s) {
+    // Check Structure Allocation
+    if (s != NULL) {
       // Unload Structure Memory
       free(s);
       s = NULL;
     }
 
     // Verify Arguments
-    verify((s) && (s->str), "[cstring] failed to initialize new structure");
+    _print_exit("[cstring] failed to initialize new string");
   }
 
-  // Copy String To Structure
-  if (istr) {
-    strncpy(s->str, istr, init_len);
+  // Verify Initialization String
+  if (init_str != NULL) {
+    // Copy Initialization String To Structure
+    strncpy(s->str, init_str, init_len);
   }
 
-  // Add Structure Allocation To Table
-  add_alloc(s);
+  // Add Structure Allocation To List
+  _add_alloc(s);
 
   // Unlock Mutex
   pthread_mutex_unlock(&cstring_mutex);
@@ -127,11 +144,11 @@ string * cstring(char * istr) {
 // End String Initializer--------------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * cap - Returns Capacity Of Indicated String
+ * cap - Returns Capacity Of Indicated String Allocation
  */
 
 int cap(string * s) {
-  // Verify Argument
+  // Verify Parameters
   if (s == NULL) {
     _print_exit("[cap] pointer is NULL");
   }
@@ -141,11 +158,11 @@ int cap(string * s) {
 }
 
 /*
- * len - Returns Length Of Indicated String
+ * len - Returns Length Of Indicated String Allocation
  */
 
 int len(string * s) {
-  // Verify Argument
+  // Verify Parameters
   if (s == NULL) {
     _print_exit("[len] pointer is NULL");
   }
@@ -155,11 +172,11 @@ int len(string * s) {
 }
 
 /*
- * str - Returns Contents Of Indicated String
+ * str - Returns Contents Of Indicated String Allocation
  */
 
 char * str(string * s) {
-  // Verify Argument
+  // Verify Parameters
   if (s == NULL) {
     _print_exit("[str] pointeer is NULL");
   } else if (s->str == NULL) {
@@ -173,44 +190,38 @@ char * str(string * s) {
 // End Field Access Functions----------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * clear - Resets Contents Of Indicated String
+ * clear - Resets Contents Of The Indicated String Allocation
  */
 
 void clear(string * s) {
   // Verify Parameters
-  if (!(s)) {
-    error("[clear] structure is NULL");
-  } else if (!(s->str)) {
-    error("[clear] string attribute is NULL");
+  if (s == NULL) {
+    _print_exit("[clear] pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[clear] string attribute is NULL");
   }
 
-  // Lock Thread Mutex
-  pthread_mutex_lock(&cstring_mutex);
-
   // Reset String Length
-  s->len = 0;
-
-  // Unlock Thread Mutex
-  pthread_mutex_unlock(&cstring_mutex);
+  s->str[0] = 0;
 }
 
 /*
- * delete - Frees Memory Of Indicated String
+ * delete - Frees Memory Of The Indicated String Allocation
  */
 
 void delete(string * s) {
   // Verify Parameters
-  if (!(s)) {
-    error("[delete] structure is NULL");
-  } else if (!(s->str)) {
-    error("[delete] string attribute is NULL");
+  if (s == NULL) {
+    _print_exit("[delete] pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[delete] string attribute is NULL");
   }
 
   // Lock Thread Mutex
   pthread_mutex_lock(&cstring_mutex);
 
   // Remove Allocation From List
-  remove_allocation(s);
+  remove_alloc(s);
 
   // Free String Memory
   free(s->str);
@@ -232,25 +243,7 @@ void delete_all(void) {
   // Lock Mutex
   pthread_mutex_lock(&cstring_mutex);
 
-  // Verify Allocation Table
-  if (cstring_allocs) {
-    // Free String Allocations
-    for (uint32 i = 0; i < max_allocs; ++i) {
-      if (cstring_allocs[i]) {
-        // Free String Memory
-        free(cstring_allocs[i]->str);
-        cstring_allocs[i]->str = NULL;
-
-        // Free Structure Memory
-        free(cstring_allocs[i]);
-        cstring_allocs[i] = NULL;
-      }
-    }
-
-    // Free Allocation Table Memory
-    free(cstring_allocs);
-    cstring_allocs = NULL;
-  }
+  // TODO: iterate over linked list
 
   // Unlock Mutex
   pthread_mutex_unlock(&cstring_mutex);
@@ -263,25 +256,30 @@ void delete_all(void) {
  */
 
 string * copy(string * s) {
-  // Verify Argument
-
-
-  // Verify Arguments
-  verify((s) && (s->str), "[copy] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[copy] pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[copy] string attribute is NULL");
+  }
 
   // Return Copy Of String
   return (cstring(s->str));
 }
 
 /*
- * substr - Returns A Copy Of Indicated String From [i, len(s)]
+ * substr - Returns A Copy Of Indicated String From [i, len(s))
  */
 
 string * substr(string * s, uint32 i) {
-  // Verify Arguments
-  verify((s) && (s->str), "[substr] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[substr] pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[substr] string attribute is NULL");
+  }
 
-  // Return Substring From [i, len(s)]
+  // Return Substring From [i, len(s))
   return ((i >= s->len) ? (NULL) : (cstring(s->str + i)));
 }
 
@@ -290,8 +288,12 @@ string * substr(string * s, uint32 i) {
  */
 
 string * substrn(string * s, uint32 i, uint32 j) {
-  // Verify Arguments
-  verify((s) && (s->str), "[substrn] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[substrn] pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[substrn] string attribute is NULL");
+  }
 
   // Range Check Indices
   if ((i < j) && (j <= s->len)) {
@@ -325,25 +327,31 @@ string * substrn(string * s, uint32 i, uint32 j) {
  */
 
 bool insert(string * s, char * c, uint32 k) {
-  // Verify Arguments
-  verify((s) && (s->str) && (c), "[insert] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[insert] pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[insert] string attribute is NULL");
+  } else if (k > s->len) {
+    _print_exit("[insert] string attribute is NULL");
+  }
 
   // Verify Index Range
   if (k > (s->len)) {
     return (CSTRING_ERR);
   }
 
-  // Calculate Insertion String Length
+  // Calculate Updated String Length
   uint32 req_len = strlen(c);
 
-  // Calculate Memory Requirements
+  // Calculate Updated String Memory
   uint32 req_mem = (s->len + req_len);
 
   // Compare Memory Values
   if ((s->cap) >= req_mem) {
     // Sufficient Memory
     if (k < s->len) {
-      // Perform Shifts
+      // Perform Character Shifts
       for (uint32 i = 0; i < req_len; ++i) {
         // Right Shift String
         for (uint32 j = s->len; j > k; --j) {
@@ -352,7 +360,7 @@ bool insert(string * s, char * c, uint32 k) {
       }
     }
 
-    // Copy Insertion String To Structure
+    // Copy Insertion String Into Structure
     for (uint32 i = 0; i < req_len; ++i) {
       s->str[k + i] = c[i];
     }
@@ -360,17 +368,19 @@ bool insert(string * s, char * c, uint32 k) {
     // Update String Length
     s->len += req_len;
   } else {
-    // Insufficent Memory
-    uint32 new_mem = (req_mem + CSTRING_ALC);
+    // Recalculate Memory Requirements
+    uint32 new_mem = (req_mem << 1);
 
-    // Allocate New String Memory Space
+    // Allocate String Memory Space
     char * new_str = (char *) calloc(sizeof(char), new_mem);
 
-    // Verify New String Memory Space
-    verify(new_str, "[insert] failed to resize string memory space");
+    // Verify Memory Pointer
+    if (new_str == NULL) {
+      _print_exit("[insert] failed to resize string memory space");
+    }
 
-    // Copy Old Memory Contents To New Memory
-    for (int i = 0; i < s->len; i++) {
+    // Transfer Memory Contents
+    for (uint32 i = 0; i < s->len; i++) {
       new_str[i] = s->str[i];
     }
 
@@ -513,10 +523,10 @@ char set(string * s, uint32 i, char c) {
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * cstring_init - Initializes Library
+ * _cstring_init - Initializes Library
  */
 
-static void cstring_init(void) {
+static void _cstring_init(void) {
   // Initialize Synchronization Lock
   pthread_mutex_init(&cstring_mutex, NULL);
 
@@ -524,4 +534,4 @@ static void cstring_init(void) {
   atexit(delete_all);
 }
 
-// End Initializer Function------------------------------------------------------------------------------------------------------------------------------------------------
+// End Initialization Function---------------------------------------------------------------------------------------------------------------------------------------------

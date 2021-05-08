@@ -1,15 +1,29 @@
 #include <stdio.h>
-#include "cstring.h"
+#include <stdlib.h>
+// #include "cstring.h"
 
 int main() {
-  char * buff = "asdfasdf";
-  string * s = cstring(buff);
+  int a = 100;
 
-  printf("%s", str(s));
+  a = (a << 1);
 
-  buff = "qwerqwerqwe";
+  char * new_str = (char *) calloc(sizeof(char), (a << 1));
 
-  append(s, buff);
+  new_str[0] = '1';
+  new_str[1] = 0;
 
-  printf("%s", str(s));
+  printf("%d\n", a);
+
+  printf("%d\n", a);
+  printf("%s\n", new_str);
+
+  // string * s = cstring(buff);
+  //
+  // printf("%s", str(s));
+  //
+  // buff = "qwerqwerqwe";
+  //
+  // append(s, buff);
+  //
+  // printf("%s", str(s));
 }
