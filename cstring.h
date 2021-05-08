@@ -33,15 +33,15 @@ typedef struct string {
 // End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Allocation List
-static string * cstring_allocs;
+static string * _alloc_head;
 
 // Thread Mutex Lock
-static pthread_mutex_t cstring_mutex;
+static pthread_mutex_t _mutex;
 
 // End Global Variables----------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Library Constructor
-static void _cstring_init(void) __attribute__ ((constructor));
+// Library Initializer
+static void _init(void) __attribute__ ((constructor));
 
 // End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -65,7 +65,18 @@ void _print_exit(char * msg) {
  */
 
 void _add_alloc(string * s) {
-  // TODO
+  // Verify Allocation List Head
+  if (_alloc_head == NULL) {
+    // Set Allocation List Head
+    _alloc_head = s;
+  } else {
+    // Apppend Allocation To List
+    _alloc_head->_next = s;
+    s->_prev = _alloc_head;
+
+    // Increment Allocation List Head
+    _alloc_head = _alloc_head->_next;
+  }
 }
 
 /*
@@ -73,7 +84,18 @@ void _add_alloc(string * s) {
  */
 
 void _remove_alloc(string * s) {
-  // TODO
+  // Verify Allocation List Head
+  if (_alloc_head == NULL) {
+    // Set Allocation List Head
+    _alloc_head = s;
+  } else {
+    // Apppend Allocation To List
+    _alloc_head->_next = s;
+    s->_prev = _alloc_head;
+
+    // Increment Allocation List Head
+    _alloc_head = _alloc_head->_next;
+  }
 }
 
 // End Private Library Functions-------------------------------------------------------------------------------------------------------------------------------------------
@@ -84,7 +106,7 @@ void _remove_alloc(string * s) {
 
 string * cstring(char * init_str) {
   // Lock Thread Mutex
-  pthread_mutex_lock(&cstring_mutex);
+  pthread_mutex_lock(&_mutex);
 
   // Initialize Default String Attributes
   uint32 init_len = 0, init_mem = CSTRING_ALC;
@@ -136,7 +158,7 @@ string * cstring(char * init_str) {
   _add_alloc(s);
 
   // Unlock Mutex
-  pthread_mutex_unlock(&cstring_mutex);
+  pthread_mutex_unlock(&_mutex);
 
   // Return String Pointer
   return (s);
@@ -219,7 +241,7 @@ void delete(string * s) {
   }
 
   // Lock Thread Mutex
-  pthread_mutex_lock(&cstring_mutex);
+  pthread_mutex_lock(&_mutex);
 
   // Remove Allocation From List
   remove_alloc(s);
@@ -233,7 +255,7 @@ void delete(string * s) {
   s = NULL;
 
   // Unlock Thread Mutex
-  pthread_mutex_unlock(&cstring_mutex);
+  pthread_mutex_unlock(&_mutex);
 }
 
 /*
@@ -241,13 +263,13 @@ void delete(string * s) {
  */
 
 void delete_all(void) {
-  // Lock Mutex
-  pthread_mutex_lock(&cstring_mutex);
+  // Lock Thead Mutex
+  pthread_mutex_lock(&_mutex);
 
   // TODO
 
-  // Unlock Mutex
-  pthread_mutex_unlock(&cstring_mutex);
+  // Unlock Thead Mutex
+  pthread_mutex_unlock(&_mutex);
 }
 
 // End Memory Management Functions-----------------------------------------------------------------------------------------------------------------------------------------
@@ -545,12 +567,12 @@ char set(string * s, uint32 i, char c) {
 // End String Access Functions---------------------------------------------------------------------------------------------------------------------------------------------
 
 /*
- * _cstring_init - Initializes Library
+ * _init - Initializes Library
  */
 
-static void _cstring_init(void) {
+static void _init(void) {
   // Initialize Synchronization Lock
-  pthread_mutex_init(&cstring_mutex, NULL);
+  pthread_mutex_init(&_mutex, NULL);
 
   // Set Exit Procedure
   atexit(delete_all);
