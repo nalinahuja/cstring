@@ -151,7 +151,7 @@ string * cstring(char * init_str) {
 int cap(string * s) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[cap] pointer is NULL");
+    _print_exit("[cap] string pointer is NULL");
   }
 
   // Return String Capacity
@@ -165,7 +165,7 @@ int cap(string * s) {
 int len(string * s) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[len] pointer is NULL");
+    _print_exit("[len] string pointer is NULL");
   }
 
   // Return String Length
@@ -179,7 +179,7 @@ int len(string * s) {
 char * str(string * s) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[str] pointeer is NULL");
+    _print_exit("[str] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[str] string attribute is NULL")
   }
@@ -197,7 +197,7 @@ char * str(string * s) {
 void clear(string * s) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[clear] pointer is NULL");
+    _print_exit("[clear] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[clear] string attribute is NULL");
   }
@@ -213,7 +213,7 @@ void clear(string * s) {
 void delete(string * s) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[delete] pointer is NULL");
+    _print_exit("[delete] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[delete] string attribute is NULL");
   }
@@ -259,7 +259,7 @@ void delete_all(void) {
 string * copy(string * s) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[copy] pointer is NULL");
+    _print_exit("[copy] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[copy] string attribute is NULL");
   }
@@ -275,7 +275,7 @@ string * copy(string * s) {
 string * substr(string * s, uint32 i) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[substr] pointer is NULL");
+    _print_exit("[substr] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[substr] string attribute is NULL");
   } else if (i >= s->len) {
@@ -293,7 +293,7 @@ string * substr(string * s, uint32 i) {
 string * substrn(string * s, uint32 i, uint32 j) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[substrn] pointer is NULL");
+    _print_exit("[substrn] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[substrn] string attribute is NULL");
   } else if (!(i < j) || !(j <= s->len)) {
@@ -328,9 +328,11 @@ string * substrn(string * s, uint32 i, uint32 j) {
 byte insert(string * s, char * c, uint32 i) {
   // Verify Parameters
   if (s == NULL) {
-    _print_exit("[insert] pointer is NULL");
+    _print_exit("[insert] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[insert] string attribute is NULL");
+  } else if (c == NULL) {
+    _print_exit("[insert] insertion string is NULL");
   } else if (i > s->len) {
     _print_exit("[insert] string index out of bounds");
   }
@@ -341,36 +343,36 @@ byte insert(string * s, char * c, uint32 i) {
   // Calculate Updated String Memory
   uint32 req_mem = (s->len + req_len);
 
-  // Compare Memory Values
+  // Verify Available Memory
   if ((s->cap) >= req_mem) {
     // Sufficient Memory
-    if (k < s->len) {
+    if (i < (s->len)) {
       // Perform Character Shifts
-      for (uint32 i = 0; i < req_len; ++i) {
+      for (uint32 j = 0; j < req_len; ++j) {
         // Right Shift String
-        for (uint32 j = s->len; j > k; --j) {
-          s->str[j + i] = s->str[j + i - 1];
+        for (uint32 k = s->len; k > i; --k) {
+          s->str[k + j] = s->str[k + j - 1];
         }
       }
     }
 
     // Copy Insertion String Into Structure
-    for (uint32 i = 0; i < req_len; ++i) {
-      s->str[k + i] = c[i];
+    for (uint32 j = 0; j < req_len; ++j) {
+      s->str[i + j] = c[j];
     }
 
     // Update String Length
     s->len += req_len;
   } else {
-    // Recalculate Memory Requirements
+    // Calculate Memory Requirement
     uint32 new_mem = (req_mem << 1);
 
-    // Allocate String Memory Space
+    // Allocate String Memory
     char * new_str = (char *) calloc(sizeof(char), new_mem);
 
     // Verify Memory Pointer
     if (new_str == NULL) {
-      _print_exit("[insert] failed to resize string memory space");
+      _print_exit("[insert] failed to extend string memory space");
     }
 
     // Transfer Memory Contents
@@ -382,7 +384,7 @@ byte insert(string * s, char * c, uint32 i) {
     free(s->str);
     s->str = NULL;
 
-    // Update String Members
+    // Update Structure Members
     s->str = new_str;
     s->cap = new_mem;
 
@@ -399,8 +401,14 @@ byte insert(string * s, char * c, uint32 i) {
  */
 
 byte append(string * s, char * c) {
-  // Verify Arguments
-  verify((s) && (s->str) && (c), "[append] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[append] string pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[append] string attribute is NULL");
+  } else if (c == NULL) {
+    _print_exit("[append] insertion string is NULL");
+  }
 
   // Perform Append Operation
   return (insert(s, c, s->len));
@@ -411,21 +419,32 @@ byte append(string * s, char * c) {
  */
 
 byte prepend(string * s, char * c) {
-  // Verify Arguments
-  verify((s) && (s->str) && (c), "[prepend] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[prepend] string pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[prepend] string attribute is NULL");
+  } else if (c == NULL) {
+    _print_exit("[prepend] insertion string is NULL");
+  }
 
   // Perform Prepend Operation
   return (insert(s, c, 0));
 }
 
 /*
- * concat - Concatenates Two String Structres Into A New String Struture
+ * concat - Concatenates Two String Structures Togehter
  */
 
 byte concat(string * s1, string * s2) {
-  // Verify Arguments
-  verify((s1) && (s2) && (s1->str) && (s2->str), "[concat] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if ((s1 == NULL) || (s2 == NULL)) {
+    _print_exit("[concat] at least one string pointer is NULL");
+  } else if ((s1->str == NULL) || (s2->str == NULL)) {
+    _print_exit("[concat] at least one string attribute is NULL");
+  }
 
+  // Perform Concatenation Operation
   return (append(s1, s2->str));
 }
 
@@ -436,8 +455,14 @@ byte concat(string * s1, string * s2) {
  */
 
 int32 find(string * s, char * c) {
-  // Verify Arguments
-  verify((s) && (s->str) && (c), "[find] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[find] string pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[find] string attribute is NULL");
+  } else if (c == NULL) {
+    _print_exit("[find] character pointer index out of bounds");
+  }
 
   // Get Substring Position
   char * pos = strstr(s->str, c);
@@ -451,11 +476,17 @@ int32 find(string * s, char * c) {
  */
 
 char get(string * s, uint32 i) {
-  // Verify Arguments
-  verify((s) && (s->str), "[get] arguments to the function or components of the string structure are null");
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[get] pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[get] string attribute is NULL");
+  } else if (i >= (s->len)) {
+    _print_exit("[get] string index out of bounds");
+  }
 
   // Return Character
-  return ((i >= (s->len)) ? (CSTRING_ERR) : (s->str[i]));
+  return (s->str[i]);
 }
 
 /*
@@ -463,6 +494,15 @@ char get(string * s, uint32 i) {
  */
 
 char rem(string * s, uint32 i) {
+  // Verify Parameters
+  if (s == NULL) {
+    _print_exit("[get] pointer is NULL");
+  } else if (s->str == NULL) {
+    _print_exit("[get] string attribute is NULL");
+  } else if (i >= (s->len)) {
+    _print_exit("[find] string index out of bounds");
+  }
+
   // Verify Arguments
   verify((s) && (s->str), "[rem] arguments to the function or components of the string structure are null");
 
