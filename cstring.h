@@ -208,7 +208,7 @@ char * str(string * s) {
   if (s == NULL) {
     _print_exit("[str] string pointer is NULL");
   } else if (s->str == NULL) {
-    _print_exit("[str] string attribute is NULL")
+    _print_exit("[str] string attribute is NULL");
   }
 
   // Return String Pointer
@@ -277,7 +277,7 @@ void delete_all(void) {
     string * s = _alloc_list;
 
     // Decrement Allocation List
-    _alloc_list = _alloc_list->_prev
+    _alloc_list = _alloc_list->_prev;
 
     // Free String Memory
     free(s->str);
