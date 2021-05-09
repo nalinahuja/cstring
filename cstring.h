@@ -321,7 +321,7 @@ string * substr(string * s, uint32 i) {
   } else if (s->str == NULL) {
     _print_exit("[substr] string attribute is NULL");
   } else if (i >= s->len) {
-    _print_exit("[substr] string index out of bounds");
+    _print_exit("[substr] string index error");
   }
 
   // Return Substring From [i, len(s))
@@ -338,11 +338,11 @@ string * substrn(string * s, uint32 i, uint32 j) {
     _print_exit("[substrn] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[substrn] string attribute is NULL");
-  } else if (!(i < j) || !(j <= (s->len))) {
-    _print_exit("[substrn] string index out of bounds");
+  } else if (!(i < j) || !(j <= s->len)) {
+    _print_exit("[substrn] string index error");
   }
 
-  // Get Substring From ith Index
+  // Substring From ith Index
   char * si = (s->str + i);
 
   // Store Removed Character
@@ -351,14 +351,14 @@ string * substrn(string * s, uint32 i, uint32 j) {
   // Set Null Terminator
   si[j - i] = 0;
 
-  // Create Substring
-  string * sn = (cstring(si));
+  // Substring To jth Index
+  string * sj = (cstring(si));
 
   // Unset Null Terminator
   si[j - i] = rc;
 
   // Return Substring From [i, j)
-  return (sn);
+  return (sj);
 }
 
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
@@ -376,7 +376,7 @@ byte insert(string * s, char * c, uint32 i) {
   } else if (c == NULL) {
     _print_exit("[insert] insertion string is NULL");
   } else if (i > s->len) {
-    _print_exit("[insert] string index out of bounds");
+    _print_exit("[insert] string index error");
   }
 
   // Calculate Updated String Length
@@ -386,9 +386,9 @@ byte insert(string * s, char * c, uint32 i) {
   uint32 req_mem = (s->len + req_len);
 
   // Verify Available Memory
-  if ((s->cap) >= req_mem) {
+  if (s->cap >= req_mem) {
     // Sufficient Memory
-    if (i < (s->len)) {
+    if (i < s->len) {
       // Perform Character Shifts
       for (uint32 j = 0; j < req_len; ++j) {
         // Right Shift String
@@ -523,8 +523,8 @@ char get(string * s, uint32 i) {
     _print_exit("[get] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[get] string attribute is NULL");
-  } else if (i >= (s->len)) {
-    _print_exit("[get] string index out of bounds");
+  } else if (i >= s->len) {
+    _print_exit("[get] string index error");
   }
 
   // Return Character
@@ -541,15 +541,15 @@ char rem(string * s, uint32 i) {
     _print_exit("[get] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[get] string attribute is NULL");
-  } else if (i >= (s->len)) {
-    _print_exit("[find] string index out of bounds");
+  } else if (i >= s->len) {
+    _print_exit("[find] string index error");
   }
 
   // Store Removed Character
   char rc = s->str[i];
 
   // Left Shift String
-  for (uint32 j = i; j < (s->len); ++j) {
+  for (uint32 j = i; j < s->len; ++j) {
     s->str[j] = s->str[j + 1];
   }
 
@@ -570,8 +570,8 @@ char set(string * s, uint32 i, char c) {
     _print_exit("[get] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[get] string attribute is NULL");
-  } else if (i >= (s->len)) {
-    _print_exit("[find] string index out of bounds");
+  } else if (i >= s->len) {
+    _print_exit("[find] string index error");
   }
 
   // Store Overwritten Character
