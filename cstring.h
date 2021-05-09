@@ -343,19 +343,19 @@ string * substrn(string * s, uint32 i, uint32 j) {
   }
 
   // Get Substring From ith Index
-  char * dup = (s->str + i);
+  char * s = (s->str + i);
 
   // Store Removed Character
-  char rc = dup[j - i];
+  char rc = s[j - i];
 
   // Set Null Terminator
-  dup[j - i] = 0;
+  s[j - i] = 0;
 
   // Create Substring
-  string * sub = (cstring(dup));
+  string * sub = (cstring(s));
 
   // Unset Null Terminator
-  dup[j - i] = rc;
+  s[j - i] = rc;
 
   // Return Substring From [i, j)
   return (sub);
