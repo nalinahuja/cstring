@@ -329,36 +329,36 @@ string * substr(string * s, uint32 i) {
 }
 
 /*
- * substrn - Returns A Copy Of Indicated String From [i, j)
+ * substrn - Returns A Copy Of Indicated String From [i, i + n)
  */
 
-string * substrn(string * s, uint32 i, uint32 j) {
+string * substrn(string * s, uint32 i, uint32 n) {
   // Verify Parameters
   if (s == NULL) {
     _print_exit("[substrn] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[substrn] string attribute is NULL");
-  } else if (!(i < j) || !(j <= s->len)) {
+  } else if (i + n > (s->len)) {
     _print_exit("[substrn] string index out of bounds");
   }
 
   // Get Substring From ith Index
-  char * s = (s->str + i);
+  char * si = (s->str + i);
 
   // Store Removed Character
-  char rc = s[j - i];
+  char rc = si[j - i];
 
   // Set Null Terminator
-  s[j - i] = 0;
+  si[j - i] = 0;
 
   // Create Substring
-  string * sub = (cstring(s));
+  string * sn = (cstring(si));
 
   // Unset Null Terminator
-  s[j - i] = rc;
+  si[j - i] = rc;
 
   // Return Substring From [i, j)
-  return (sub);
+  return (sn);
 }
 
 // End String Duplication Functions----------------------------------------------------------------------------------------------------------------------------------------
