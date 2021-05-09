@@ -74,7 +74,7 @@ void _add_alloc(string * s) {
     _alloc_list->_next = s;
     s->_prev = _alloc_list;
 
-    // Increment Allocation List
+    // Increment Allocation List Pointer
     _alloc_list = _alloc_list->_next;
   }
 }
@@ -276,7 +276,7 @@ void delete_all(void) {
     // Get Allocation From List
     string * s = _alloc_list;
 
-    // Decrement Allocation List
+    // Decrement Allocation List Pointer
     _alloc_list = _alloc_list->_prev;
 
     // Free String Memory
