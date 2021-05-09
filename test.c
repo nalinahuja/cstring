@@ -8,7 +8,7 @@ int main() {
 
   printf("%s\n", str(s));
 
-  string * sn = substrn(s, 3, 3);
+  string * sn = substrn(s, 4, 0);
 
   printf("%s\n", str(sn));
 }
