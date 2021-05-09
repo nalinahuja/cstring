@@ -329,16 +329,16 @@ string * substr(string * s, uint32 i) {
 }
 
 /*
- * substrn - Returns A Copy Of Indicated String From [i, i + n)
+ * substrn - Returns A Copy Of Indicated String From [i, j)
  */
 
-string * substrn(string * s, uint32 i, uint32 n) {
+string * substrn(string * s, uint32 i, uint32 j) {
   // Verify Parameters
   if (s == NULL) {
     _print_exit("[substrn] string pointer is NULL");
   } else if (s->str == NULL) {
     _print_exit("[substrn] string attribute is NULL");
-  } else if (i + n > (s->len)) {
+  } else if (!(i < j) || !(j <= (s->len))) {
     _print_exit("[substrn] string index out of bounds");
   }
 
