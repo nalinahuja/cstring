@@ -91,12 +91,12 @@ void _remove_alloc(string * s) {
       _alloc_list = _alloc_list->_prev;
     }
 
-    // Unbind Right Node
+    // Unbind Next Node
     if (s->_next != NULL) {
       s->_next->_prev = s->_prev;
     }
 
-    // Unbind Left Node
+    // Unbind Previous Node
     if (s->_prev != NULL) {
       s->_prev->_next = s->_next;
     }
