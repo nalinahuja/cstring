@@ -1,4 +1,4 @@
-// Developed by Nalin Ahuja, nalinahuja22
+// Developed by Nalin Ahuja, nalinahuja
 
 // Header Files
 #include <stdlib.h>
