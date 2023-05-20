@@ -1,5 +1,15 @@
 // Developed by Nalin Ahuja, nalinahuja
 
+// Return Codes
+#define CSTRING_OK (0)
+#define CSTRING_ERR (1)
+
+// Embedded Values
+#define CSTRING_EOL (-1)
+#define CSTRING_ALLOC (16)
+
+// End Macro Definitions---------------------------------------------------------------------------------------------------------------------------------------------------
+
 // Numerical Types
 typedef unsigned int uint;
 
@@ -15,7 +25,7 @@ typedef struct string {
   struct string * _next;
 } string;
 
-// End Defined Types-------------------------------------------------------------------------------------------------------------------------------------------------------
+// End Type Definitions----------------------------------------------------------------------------------------------------------------------------------------------------
 
 // String Initializer Function Prototype
 string * cstring(char *);
@@ -47,4 +57,4 @@ char get(string *, uint);
 char rem(string *, uint);
 char set(string *, uint, char);
 
-// End Function Prototypes--------------------------------------------------------------------------------------------------------------------------------------------------
+// End Function Prototypes-------------------------------------------------------------------------------------------------------------------------------------------------

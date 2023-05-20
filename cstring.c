@@ -7,14 +7,6 @@
 
 #include "cstring.h"
 
-// Return Codes
-#define CSTRING_OK (0)
-#define CSTRING_ERR (1)
-
-// Embedded Values
-#define CSTRING_EOL (-1)
-#define CSTRING_ALLOC (16)
-
 // End Includes and Definitions--------------------------------------------------------------------------------------------------------------------------------------------
 
 // Allocation List
